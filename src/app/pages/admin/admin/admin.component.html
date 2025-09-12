@@ -1,0 +1,225 @@
+<div class="container-fluid text-center" id="titre">
+  <div class="row justify-content-between align-items-center">
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+      <!-- Titre à gauche -->
+      <div class="text-start">
+        <h1 class="d-flex align-items-center">
+          <i class="bi bi-book me-2" id="icone"></i>
+          Annuaire interne
+        </h1>
+        <p id="Texte">Trouver rapidement vos collègues</p>
+      </div>
+      <div>
+        <div class="dropdown">
+          <a href="#" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+            class="d-flex align-items-center text-decoration-none">
+            <i class="bi bi-person-circle fs-1" id="icone"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li>
+              <a class="dropdown-item" [routerLink]="['/parametres']">
+                Paramètres personnels
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+             <a class="dropdown-item text-danger" href="#" (click)="logout($event)">
+  <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+</a>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cartes d'affichage des données -->
+<div class="gestion">
+  <div class="card-container">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Total employés</h5>
+        <p class="card-text"><span class="stat-number">{{ employes.length }}</span></p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Total départements</h5>
+        <p class="card-text">2</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Total services</h5>
+        <p class="card-text">2</p>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <!-- Barre de recherche -->
+  <app-search (searchEvent)="employes = $event"></app-search>
+
+  <ul class="list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let emp of paginatedEmployes">
+      <div class="d-flex align-items-center">
+        <!-- Icône selon le rôle -->
+        <i class="bi bi-shield-lock-fill text-danger ms-2" *ngIf="emp.role?.toUpperCase() === 'ADMIN'" title="Admin"></i>
+        <i class="bi bi-person-fill text-secondary ms-2" *ngIf="emp.role?.toUpperCase() !== 'ADMIN'" title="User"></i>
+        <div class="ms-3">
+          <div class="fw-bold">{{ emp.nom }} {{ emp.prenom }}</div>
+          <span class="text-muted">{{ emp.poste }}</span><br>
+          <span class="text-muted">{{ emp.direction }}</span>
+          <small class="text-muted d-block">IP : {{ emp.ip }}</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-outline-secondary" title="Modifier" (click)="editEmployee(emp)">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger" title="Supprimer" (click)="deleteEmployee(emp)">
+          <i class="bi bi-trash"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-primary" title="Changer de rôle" (click)="switchRole(emp)">
+          <i class="bi bi-person-gear"></i>
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- Modal de formulaire d'ajout/modification -->
+<div class="modal fade show" tabindex="-1" *ngIf="showAddForm" 
+     style="display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1050; overflow: hidden;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow-lg rounded-4 p-3">
+      <div class="modal-header border-0 pb-0">
+        <h4 class="modal-title text-primary fw-bold">{{ isEditing ? 'Modifier un employé' : 'Ajouter un employé' }}</h4>
+        <button type="button" class="btn-close" (click)="showAddForm = false"></button>
+      </div>
+      <hr class="mt-0 mb-3">
+      <div class="modal-body pt-0">
+        <form [formGroup]="addEmployeeForm" (ngSubmit)="updateEmploye()">
+          <div class="row g-3">
+            <!-- Nom -->
+            <div class="col-12 col-lg-6">
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom" [readonly]="isEditing">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('nom')?.invalid && addEmployeeForm.get('nom')?.touched">
+                Le nom est obligatoire.
+              </div>
+            </div>
+
+            <!-- Prénom -->
+            <div class="col-12 col-lg-6">
+              <label for="prenom" class="form-label">Prénom</label>
+              <input type="text" class="form-control" id="prenom" formControlName="prenom" [readonly]="isEditing">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('prenom')?.invalid && addEmployeeForm.get('prenom')?.touched">
+                Le prénom est obligatoire.
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-12 col-lg-6">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email" [readonly]="isEditing">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('email')?.invalid && addEmployeeForm.get('email')?.touched">
+                Adresse Email obligatoire.
+              </div>
+            </div>
+
+            <!-- Téléphone -->
+            <div class="col-12 col-lg-6">
+              <label for="tel" class="form-label">Téléphone</label>
+              <input type="text" class="form-control" id="tel" formControlName="telephone">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched">
+                Le téléphone est obligatoire.
+              </div>
+            </div>
+
+            <!-- IP -->
+            <div class="col-12 col-lg-6">
+              <label for="ip" class="form-label">IP</label>
+              <input type="text" class="form-control" id="ip" formControlName="ip">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('ip')?.invalid && addEmployeeForm.get('ip')?.touched">
+                L'IP est obligatoire.
+              </div>
+            </div>
+
+            <!-- Poste -->
+            <div class="col-12 col-lg-6">
+              <label for="poste" class="form-label">Poste</label>
+              <input type="text" class="form-control" id="poste" formControlName="poste" [readonly]="isEditing">
+            </div>
+
+            <!-- Direction -->
+            <div class="col-12 col-lg-6">
+              <label for="direction" class="form-label">Direction</label>
+              <input type="text" class="form-control" id="direction" formControlName="direction" [readonly]="isEditing">
+            </div>
+
+            <!-- Service -->
+            <div class="col-12 col-lg-6">
+              <label for="service" class="form-label">Service</label>
+              <input type="text" class="form-control" id="service" formControlName="service" [readonly]="isEditing">
+            </div>
+          </div>
+
+          <div class="modal-footer border-0 mt-4 d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary px-4" [disabled]="addEmployeeForm.invalid">
+              {{ isEditing ? 'Modifier' : 'Ajouter' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="resetForm()">Fermer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination-section">
+  <div class="container-modern">
+    <nav class="pagination-nav" aria-label="Navigation des pages">
+      <div class="pagination-wrapper">
+        <!-- Bouton précédent -->
+        <button 
+          class="pagination-btn pagination-prev"
+          (click)="goToPreviousPage()"
+          [disabled]="currentPage === 0">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <polyline points="15,18 9,12 15,6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Précédent
+        </button>
+
+        <!-- Pages -->
+        <div class="pagination-pages">
+          <button *ngFor="let page of pages"
+                  class="pagination-page-btn"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)">
+            {{ page + 1 }}
+          </button>
+        </div>
+
+        <!-- Bouton suivant -->
+        <button 
+          class="pagination-btn pagination-next"
+          (click)="goToNextPage()"
+          [disabled]="currentPage === totalPages - 1">
+          Suivant
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <polyline points="9,18 15,12 9,6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="pagination-info">
+        Page {{ currentPage + 1 }} / {{ totalPages }}
+      </div>
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+
+<!-- Importation de l entete -->
+<app-entete></app-entete>
+
+<!-- Importation de la barre de recherche -->
+<app-search></app-search>
+
+
+
+<!-- Annuaire des Employés -->
+<div class="directory-section">
+  <div class="container-modern">
+    
+    <!-- Statistiques -->
+    <div class="directory-stats fade-in">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-number">{{ employees.length }}</span>
+          <span class="stat-label">Employés trouvés</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grille des employés -->
+    <div class="employees-grid slide-up">
+      <article class="employee-card" *ngFor="let emp of paginatedEmployees; trackBy: trackByEmployee">
+        
+        <!-- Header principal avec nom et IP -->
+        <header class="employee-primary">
+          <div class="employee-avatar">
+            <div class="avatar-circle">
+              <span class="avatar-initials">{{ getInitials(emp.nom + ' ' + emp.prenom) }}</span>
+              <div class="avatar-ring"></div>
+            </div>
+          </div>
+          
+          <div class="employee-identity">
+            <h2 class="employee-name">{{ emp.nom }} {{ emp.prenom }}</h2>
+            <div class="employee-id-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 15h0M7 11h0M11 15h6M11 11h6" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <span class="employee-ip">{{ emp.ip }}</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Informations secondaires -->
+        <div class="employee-secondary">
+          <div class="position-info">
+            <h3 class="employee-position">{{ emp.poste }}</h3>
+            <p class="employee-direction">{{ emp.direction }}</p>
+          </div>
+        </div>
+
+        <!-- Informations de contact -->
+        <footer class="employee-contact">
+          <div class="contact-grid">
+            <a class="contact-item email-contact">
+              <div class="contact-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2"/>
+                  <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <span class="contact-text">{{ emp.email }}</span>
+              <div class="contact-shimmer"></div>
+            </a>
+            
+            <a class="contact-item phone-contact">
+              <div class="contact-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <span class="contact-text">{{ emp.telephone }}</span>
+              <div class="contact-shimmer"></div>
+            </a>
+          </div>
+          
+          <div class="service-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-width="2"/>
+              <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>{{ emp.service }}</span>
+            <div class="tag-glow"></div>
+          </div>
+        </footer>
+
+      </article>
+    </div>
+
+  </div>
+</div>
+
+<!-- Pagination moderne -->
+<div class="pagination-section">
+  <div class="container-modern">
+    <nav class="pagination-nav" aria-label="Navigation des pages">
+      <div class="pagination-wrapper">
+
+        <!-- Bouton précédent -->
+        <button 
+          class="pagination-btn pagination-prev"
+          (click)="goToPreviousPage()"
+          [disabled]="currentPage === 0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="15,18 9,12 15,6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <span>Précédent</span>
+          <div class="btn-glow"></div>
+        </button>
+
+        <!-- Pages -->
+        <div class="pagination-pages">
+          <button *ngFor="let page of pages"
+                  class="pagination-page-btn"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)">
+            <span>{{ page + 1 }}</span>
+            <div class="page-ripple"></div>
+          </button>
+        </div>
+
+        <!-- Bouton suivant -->
+        <button 
+          class="pagination-btn pagination-next"
+          (click)="goToNextPage()"
+          [disabled]="currentPage === totalPages - 1">
+          <span>Suivant</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polyline points="9,18 15,12 9,6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <div class="btn-glow"></div>
+        </button>
+
+      </div>
+      <div class="pagination-info">
+        <span>Page {{ currentPage + 1 }} / {{ totalPages }}</span>
+      </div>
+    </nav>
+  </div>
+</div>

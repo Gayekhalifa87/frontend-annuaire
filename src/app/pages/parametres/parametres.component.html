@@ -1,0 +1,85 @@
+<!-- Header avec infos utilisateur -->
+ <!-- Header avec infos utilisateur -->
+<app-settings-header [user]="user"></app-settings-header>
+
+
+<div class="container py-4">
+
+  <!-- Profil -->
+  <div class="card mb-4 shadow-sm border-0 rounded-3">
+    <div class="card-header bg-transparent border-0">
+      <h2 class="h5 mb-1">Informations Personnelles</h2>
+      <small class="text-muted">Gérez vos informations de profil visible dans l'annuaire</small>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="profileForm" (ngSubmit)="saveChanges()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Identifiant IP</label>
+            <input type="text" class="form-control rounded-2" formControlName="ip">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Numéro téléphone</label>
+            <input type="text" class="form-control rounded-2" formControlName="telephone">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-control rounded-2" formControlName="nom" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Prénom</label>
+            <input type="text" class="form-control rounded-2" formControlName="prenom" readonly>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Adresse Email</label>
+            <input type="email" class="form-control rounded-2" formControlName="email" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Poste</label>
+            <input type="text" class="form-control rounded-2" formControlName="poste" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Direction</label>
+            <input type="text" class="form-control rounded-2" formControlName="direction" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Service</label>
+            <input type="text" class="form-control rounded-2" formControlName="service" readonly>
+          </div>
+        </div>
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sécurité -->
+  <div class="card mb-4 shadow-sm border-0 rounded-3">
+    <div class="card-header bg-transparent border-0">
+      <h2 class="h5 mb-1">Sécurité</h2>
+      <small class="text-muted">Gérez la sécurité de votre compte et vos accès</small>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="mb-3">
+          <label class="form-label">Mot de passe actuel</label>
+          <input type="password" formControlName="current" class="form-control rounded-2">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nouveau mot de passe</label>
+          <input type="password" formControlName="new" class="form-control rounded-2">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Confirmer le mot de passe</label>
+          <input type="password" formControlName="confirm" class="form-control rounded-2">
+          <div *ngIf="passwordForm.errors?.['mismatch']" class="text-danger mt-1">
+            Les mots de passe ne correspondent pas
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary shadow-sm mb-3">Mettre à jour le mot de passe</button>
+      </form>
+    </div>
+  </div>
+
+</div>
