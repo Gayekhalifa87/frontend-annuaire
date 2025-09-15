@@ -1,9 +1,14 @@
 
-<!-- Importation de l entete -->
-<app-entete></app-entete>
 
 <!-- Importation de la barre de recherche -->
-<app-search></app-search>
+<app-entete></app-entete>
+
+<app-search 
+  [employees]="employees" 
+  (searchEvent)="onSearchEvent($event)" 
+  (clearEvent)="onClearEvent()">
+</app-search>
+
 
 <!-- Annuaire des Employés -->
 <div class="directory-section">
@@ -149,3 +154,5 @@
     </nav>
   </div>
 </div>
+
+

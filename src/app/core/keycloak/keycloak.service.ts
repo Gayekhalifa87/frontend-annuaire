@@ -3,7 +3,7 @@ import Keycloak, { KeycloakInstance } from 'keycloak-js';
 
 @Injectable({
   providedIn: 'root'
-})
+})  
 export class KeycloakService {
   private keycloak!: KeycloakInstance;
   private initialized = false;

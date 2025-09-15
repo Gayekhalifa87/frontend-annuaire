@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EmployeService, Employe } from '../../core/employe.service';
+import { Employe } from '../../core/employe.service';
 
 @Component({
   selector: 'app-search',
@@ -13,33 +13,33 @@ import { EmployeService, Employe } from '../../core/employe.service';
 export class SearchComponent {
   searchTerm: string = '';
 
-  // 🔹 Déclarer la propriété pour stocker les résultats
+  @Input() employees: Employe[] = [];
   employes: Employe[] = [];
 
-  constructor(private employeService: EmployeService) {}
-
-  // 🔹 Type correct pour l'output
   @Output() searchEvent = new EventEmitter<Employe[]>();
   @Output() clearEvent = new EventEmitter<void>();
 
-  // 🔹 Recherche par IP
   onSearch() {
-  if (!this.searchTerm) return;
+    if (!this.searchTerm) {
+      this.employes = [];
+      this.searchEvent.emit([]);
+      return;
+    }
 
-  const ip = Number(this.searchTerm);
-  this.employeService.searchByIp(ip).subscribe({
-    next: (result) => {
-      // Si result est un tableau, on garde ; sinon on met dans un tableau
-      this.employes = Array.isArray(result) ? result : (result ? [result] : []);
-      this.searchEvent.emit(this.employes);
-    },
-    error: (err) => console.error('Erreur recherche', err)
-  });
-}
+    const term = this.searchTerm.toLowerCase();
+
+    this.employes = this.employees.filter(emp =>
+      (emp.nom?.toLowerCase().includes(term)) ||
+      (emp.prenom?.toLowerCase().includes(term)) ||
+      (emp.ip?.toString().includes(term))
+    );
+
+    this.searchEvent.emit(this.employes);
+  }
 
   clearSearch() {
     this.searchTerm = '';
-    this.employes = []; // vide également la liste
+    this.employes = [];
     this.clearEvent.emit();
   }
 }
