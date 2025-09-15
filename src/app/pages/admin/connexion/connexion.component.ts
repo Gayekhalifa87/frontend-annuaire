@@ -32,23 +32,6 @@ export class ConnexionComponent implements OnInit {
     });
   }
 
-  /** 🔹 Connexion avec Keycloak */
-  async onLogin() {
-    this.isLoading = true;
-    try {
-      if (!this.keycloakService.isInitialized()) {
-        await this.keycloakService.init(); // Init si pas déjà fait
-      }
-      await this.keycloakService.login();
-      console.log("✅ Utilisateur connecté :", this.keycloakService.getUserProfile());
-      this.router.navigate(['/admin']);
-    } catch (err) {
-      console.error('❌ Erreur de connexion', err);
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
   /** 🔹 Déconnexion */
   async onLogout() {
     await this.keycloakService.logout();

@@ -7,7 +7,7 @@
     </div>
 
     <div class="login-form text-center" *ngIf="!isInitializing; else loadingTpl">
-      <button (click)="onLogin()" 
+      <button  
               class="btn-modern login-button" 
               [disabled]="isLoading" 
               [class.loading]="isLoading">

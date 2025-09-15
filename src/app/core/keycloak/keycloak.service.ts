@@ -42,23 +42,25 @@ export class KeycloakService {
     this.keycloak?.login({ prompt: 'login' });
   }
 
-  /** Déconnexion → redirige vers la page d’accueil */
-  async logout(redirectUrl: string = '/accueil'): Promise<void> {
-    if (!this.keycloak) return;
+ 
+  /** Déconnexion avec redirection */
+async logout(redirectUrl: string = '/accueil'): Promise<void> {
+  if (!this.keycloak) return;
 
-    try {
-      // Nettoyage local
-      localStorage.clear();
-      sessionStorage.clear();
+  try {
+    // Nettoyage local
+    localStorage.clear();
+    sessionStorage.clear();
 
-      // Redirection vers Keycloak logout
-      const redirectUri = encodeURIComponent(window.location.origin + redirectUrl);
-      const logoutUrl = `${this.keycloak.authServerUrl}/realms/${this.keycloak.realm}/protocol/openid-connect/logout?redirect_uri=${redirectUri}`;
-      window.location.href = logoutUrl;
-    } catch (err) {
-      console.error('❌ Erreur logout Keycloak', err);
-    }
+    // 🔹 Redirection vers Keycloak logout (sans logout-confirm)
+    await this.keycloak.logout({
+      redirectUri: window.location.origin + redirectUrl
+    });
+  } catch (err) {
+    console.error('❌ Erreur logout Keycloak', err);
   }
+}
+
 
   getToken(): string | null {
     return this.keycloak?.token ?? null;
