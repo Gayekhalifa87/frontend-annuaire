@@ -188,6 +188,7 @@ export class AdminComponent {
     this.showAddForm = false;
     this.isEditing = false;
     this.editingEmployeeId = null;
+    this.loadEmployees();
   }
 
   /** 🔹 Recherche via le composant Search */
@@ -195,7 +196,10 @@ export class AdminComponent {
     this.employes = results;
     this.currentPage = 0;
     this.calculatePagination();
+    console.log('Résultats de la recherche :', results);
+
   }
+
 
   /** 🔹 Déconnexion */
 logout(event: Event) {

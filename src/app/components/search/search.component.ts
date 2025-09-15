@@ -38,8 +38,10 @@ export class SearchComponent {
   }
 
   clearSearch() {
-    this.searchTerm = '';
-    this.employes = [];
-    this.clearEvent.emit();
-  }
+  this.searchTerm = '';
+  this.employes = [];
+  // Émettre un événement pour dire au parent "la recherche est vide"
+  this.clearEvent.emit();
+}
+
 }

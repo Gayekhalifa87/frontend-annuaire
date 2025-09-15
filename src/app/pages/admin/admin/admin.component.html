@@ -60,7 +60,11 @@
   <br>
 
   <!-- Barre de recherche -->
-  <app-search (searchEvent)="employes = $event"></app-search>
+  <app-search 
+  [employees]="employes"
+  (searchEvent)="onSearchResult($event)"
+  (clearEvent)="loadEmployees()">
+</app-search>
 
   <ul class="list-group">
     <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let emp of paginatedEmployes">
