@@ -201,11 +201,12 @@ export class AdminComponent {
   }
 
 
-  /** 🔹 Déconnexion */
-logout(event: Event) {
-  event.preventDefault(); // 🔹 empêche la navigation #
-  this.authService.logout(); // 🔹 logout Keycloak → redirection vers /accueil
-}
+  /** Déconnexion */
+  onLogout() {
+    console.log('🚪 Déconnexion...');
+    this.authService.logout();
+    this.router.navigate(['/accueil']);
+  }
 
 
 }

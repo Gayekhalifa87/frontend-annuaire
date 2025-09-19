@@ -19,7 +19,7 @@ export class AppComponent {
 
   ngOnInit() {
     // ⚡ Utilisation après injection
-    this.keycloakService.init(false).then(() => {
+    this.keycloakService.init(true).then(() => {
       if (!this.keycloakService.isLoggedIn()) {
         console.log("Utilisateur non connecté");
       } else {

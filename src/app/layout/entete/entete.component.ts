@@ -1,53 +1,56 @@
-import { Component } from '@angular/core';
-import { Router, RouterModule, Route } from '@angular/router';
-import { inject } from '@angular/core';
-import { KeycloakService } from '../../core/keycloak/keycloak.service';
-
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-entete',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './entete.component.html',
   styleUrl: './entete.component.css'
 })
-export class EnteteComponent {
+export class EnteteComponent implements OnInit {
+  isLoggedIn = false;
+  currentUser: any = null;
 
-
- private router = inject(Router);
-  private keycloakService = inject(KeycloakService);
-
-  isLoading = false;
-  isInitializing = true; // pour gérer le spinner si besoin
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    // Lancement de l’init en arrière-plan
-    this.keycloakService.init().then(() => {
-      if (this.keycloakService.isLoggedIn()) {
-        console.log("✅ Déjà connecté :", this.keycloakService.getUserProfile());
-        this.router.navigate(['/admin']);
-      }
-    }).finally(() => {
-      this.isInitializing = false; // affiche le formulaire immédiatement
+    // Écouter les changements d'état de connexion
+    this.authService.isLoggedIn$.subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+      console.log('📊 État connexion:', loggedIn);
+    });
+
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      console.log('👤 Utilisateur actuel:', user);
     });
   }
   
-  /** 🔹 Connexion avec Keycloak */
-  async onLogin() {
-    this.isLoading = true;
-    try {
-      if (!this.keycloakService.isInitialized()) {
-        await this.keycloakService.init(); // Init si pas déjà fait
-      }
-      await this.keycloakService.login();
-      console.log("✅ Utilisateur connecté :", this.keycloakService.getUserProfile());
-      this.router.navigate(['/admin']);
-    } catch (err) {
-      console.error('❌ Erreur de connexion', err);
-    } finally {
-      this.isLoading = false;
-    }
+  /** Navigation vers login */
+  onLogin() {
+    console.log('🔐 Redirection vers login...');
+    this.router.navigate(['/login']);
   }
 
-}
+  /** Déconnexion */
+  onLogout() {
+    console.log('🚪 Déconnexion...');
+    this.authService.logout();
+    this.router.navigate(['/accueil']);
+  }
 
+  /** Navigation vers admin */
+  goToAdmin() {
+    if (this.isLoggedIn) {
+      this.router.navigate(['/admin']);
+    } else {
+      this.onLogin();
+    }
+  }
+}

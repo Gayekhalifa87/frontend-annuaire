@@ -18,7 +18,7 @@ export class AccueilComponent implements OnInit {
   filteredEmployees: Employe[] = [];   // Résultats de recherche
 
   currentPage = 0;
-  pageSize = 8; // Nombre d'employés par page
+  pageSize = 6; 
   totalPages = 0;
   pages: number[] = [];
 
@@ -33,7 +33,7 @@ export class AccueilComponent implements OnInit {
     this.employeService.getAllCombinedEmployes()
       .subscribe(res => {
         this.employees = res;
-        this.filteredEmployees = []; // Au départ, pas de filtre
+        this.filteredEmployees = []; 
         this.updatePagination(this.employees.length);
       });
   }

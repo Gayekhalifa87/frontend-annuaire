@@ -337,6 +337,7 @@
   background: var(--primary);
   border-color: var(--primary);
   color: var(--white);
+  
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -376,8 +377,8 @@
 }
 
 .pagination-page-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: #192D70;
+  border-color: #192D70;
   color: var(--white);
   box-shadow: var(--shadow-md);
   transform: scale(1.1);
@@ -425,7 +426,7 @@
   .employees-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-6);
-    max-width: 480px;
+    max-width: 550px;
   }
   
   .employee-card {
@@ -435,8 +436,8 @@
   .employee-primary {
     flex-direction: column;
     text-align: center;
-    gap: var(--spacing-4);
-    padding: var(--spacing-6);
+    gap: var(--spacing-6);
+    padding: var(--spacing-8);
   }
   
   .employee-identity {
@@ -528,6 +529,104 @@
     font-size: var(--font-size-xs);
   }
   
+  /* MON AJOUT  */
+
+  /* Futuriste + Glassmorphism */
+.futuristic-card {
+  background: rgba(25, 29, 112, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(25, 29, 112, 0.2);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 20px rgba(25, 29, 112, 0.15);
+  transition: all 0.35s ease;
+}
+
+.futuristic-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 6px 28px rgba(25, 29, 112, 0.35);
+}
+
+/* Neon Ring */
+.neon-ring {
+  position: relative;
+  border: 3px solid #191970;
+  box-shadow: 0 0 15px #19197080, 0 0 30px #192D70aa;
+}
+
+.neon-ring:hover {
+  box-shadow: 0 0 20px #191970cc, 0 0 40px #192D70dd;
+}
+
+/* Pulse badge (IP) */
+.pulse-badge {
+  background: #192D70;
+  color: #fff;
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0px #192D70; }
+  50% { box-shadow: 0 0 12px #192D70; }
+}
+
+/* Futuristic links */
+.futuristic-link {
+  background: rgba(25, 29, 112, 0.05);
+  border: 1px solid rgba(25, 29, 112, 0.3);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+}
+
+.futuristic-link:hover {
+  background: rgba(25, 29, 112, 0.15);
+  border-color: #191970;
+  color: #191970;
+  transform: translateY(-2px);
+}
+
+/* Futuristic tags */
+.futuristic-tag {
+  background: linear-gradient(135deg, #191970, #192D70);
+  color: white;
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 12px rgba(25, 29, 112, 0.3);
+}
+
+/* Glassy header */
+.glassy-header {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(25, 29, 112, 0.15);
+}
+
+/* Pagination futuriste */
+.pagination-btn {
+  background: rgba(25, 29, 112, 0.05);
+  border: 1px solid rgba(25, 29, 112, 0.3);
+  border-radius: var(--radius-lg);
+  color: #191970;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #191970;
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.pagination-page-btn.active {
+  background: #191970;
+  color: white;
+  box-shadow: 0 0 10px rgba(25, 29, 112, 0.4);
+  transform: scale(1.1);
+}
+
+
   .pagination-page-btn {
     width: 40px;
     height: 40px;

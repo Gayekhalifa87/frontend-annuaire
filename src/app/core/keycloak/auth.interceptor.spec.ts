@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpInterceptorFn } from '@angular/common/http';
+import { AuthInterceptor } from './auth.interceptor';
 
-import { keyloakInterceptor } from './keyloak.interceptor';
 
-describe('keyloakInterceptor', () => {
+describe('auhInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) => 
-    TestBed.runInInjectionContext(() => keyloakInterceptor(req, next));
+    TestBed.runInInjectionContext(() => AuthInterceptor(req, next));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -15,3 +15,6 @@ describe('keyloakInterceptor', () => {
     expect(interceptor).toBeTruthy();
   });
 });
+
+
+

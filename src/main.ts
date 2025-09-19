@@ -1,22 +1,24 @@
-//
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { importProvidersFrom } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
-import { KeycloakService } from './app/core/keycloak/keycloak.service';
-import { KeycloakInterceptor } from './app/core/keycloak/keyloak.interceptor';
+import { AuthInterceptor } from './app/core/keycloak/auth.interceptor';
 
-const keycloakService = new KeycloakService();
-
-keycloakService.init().then(() => {
-  bootstrapApplication(AppComponent, {
-    providers: [
-      provideRouter(routes),
-      provideHttpClient(withInterceptorsFromDi()),
-      { provide: KeycloakService, useValue: keycloakService },
-      { provide: HTTP_INTERCEPTORS, useClass: KeycloakInterceptor, multi: true }
-    ]
-  }).catch(err => console.error(err));
-});
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(
+      RouterModule.forRoot(routes),
+      HttpClientModule,
+      ReactiveFormsModule
+    ),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ]
+}).catch(err => console.error(err));

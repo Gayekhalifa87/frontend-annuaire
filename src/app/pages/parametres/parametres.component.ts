@@ -43,22 +43,23 @@ export class ParametresComponent implements OnInit {
 
   ngOnInit() {
     // 🔹 S'abonner à currentUser$ pour récupérer l'utilisateur
-    this.authService.currentUser$.subscribe(user => {
-      this.user = user;
+    this.authService.currentUser$.subscribe((user: any) => {
+  this.user = user;
 
-      if (this.user) {
-        this.profileForm.patchValue({
-          nom: this.user.nom,
-          prenom: this.user.prenom,
-          email: this.user.email || '',
-          ip: this.user.ip,
-          telephone: this.user.telephone,
-          poste: this.user.poste,
-          direction: this.user.direction,
-          service: this.user.service
-        });
-      }
+  if (this.user) {
+    this.profileForm.patchValue({
+      nom: this.user.nom,
+      prenom: this.user.prenom,
+      email: this.user.email || '',
+      ip: this.user.ip,
+      telephone: this.user.telephone,
+      poste: this.user.poste,
+      direction: this.user.direction,
+      service: this.user.service
     });
+  }
+});
+
   }
 
   passwordMatchValidator(form: FormGroup) {
