@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth.service';
+import { KeycloakService } from '../../core/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-entete',
@@ -16,6 +17,7 @@ export class EnteteComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private keycloakService : KeycloakService,
     private router: Router
   ) {}
 
@@ -33,10 +35,16 @@ export class EnteteComponent implements OnInit {
   }
   
   /** Navigation vers login */
-  onLogin() {
-    console.log('🔐 Redirection vers login...');
-    this.router.navigate(['/login']);
-  }
+    onLogin() {
+      console.log('🔐 Redirection vers login...');
+      if (this.keycloakService.isLoggedIn()) {
+        this.keycloakService.logout().then(() => {
+          this.keycloakService.login();
+        });
+      } else {
+        this.keycloakService.login();
+      }
+    }
 
   /** Déconnexion */
   onLogout() {

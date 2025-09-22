@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { KeycloakService } from '../../core/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -20,7 +21,10 @@ export class ResetPasswordComponent implements OnInit {
   confrm = false;
   showConfirm: any;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
+  constructor(private route: ActivatedRoute,
+     private http: HttpClient,
+     private keycloakService : KeycloakService,
+     private router: Router) {}
 
   ngOnInit() {
     this.token = this.route.snapshot.paramMap.get('token')!;
@@ -36,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           /* alert(res.message); */
-          this.router.navigate(['/login']);
+          this.keycloakService.login();
         },
         error: (err) => {
           console.error(err);

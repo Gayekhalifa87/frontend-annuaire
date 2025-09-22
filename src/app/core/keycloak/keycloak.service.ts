@@ -16,11 +16,7 @@ export class KeycloakService {
     this.keycloak = new Keycloak({
       url: 'https://refonte.seneau.sn/',
       realm: 'auth2-dev',
-      clientId: 'seneau',
-      // ✅ Pour un client confidentiel, ajoutez :
-      // credentials: {
-      //   secret: 'eLDu7SfmCjSGlI7YOFXp7xZtgJi73mhF'
-      // }
+      clientId: 'seneau-portal',
     });
 
     this.initPromise = this.keycloak.init({
@@ -57,16 +53,9 @@ export class KeycloakService {
     return this.initialized;
   }
 
-  /** Connexion */
-  login(): void {
-    if (!this.keycloak) {
-      console.error('❌ Keycloak pas encore initialisé');
-      return;
-    }
-    
-    this.keycloak.login({ 
-      prompt: 'login',
-      // ✅ Ajoutez une URL de redirection explicite
+
+  login() {
+    this.keycloak.login({
       redirectUri: window.location.origin + '/admin'
     });
   }

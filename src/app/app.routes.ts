@@ -4,6 +4,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { inject } from '@angular/core';
 import { AuthService } from './core/auth.service';
+import { KeycloakService } from './core/keycloak/keycloak.service';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { AuthGuard } from './core/keycloak/core/keycloak/auth.guard';
@@ -12,11 +13,12 @@ import { AuthGuard } from './core/keycloak/core/keycloak/auth.guard';
 export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const keycloakService = inject(KeycloakService);
 
   return authService.isLoggedIn$.pipe(
     map(isLoggedIn => {
       if (isLoggedIn) return true;
-      router.navigate(['/connexion']);
+      keycloakService.login();
       return false;
     })
   );
@@ -50,11 +52,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/login/login.component').then(m => m.LoginComponent),
     canActivate: [guestGuard]  // Redirige si déjà connecté
   },
-  { 
-    path: 'connexion',
-    loadComponent: () => import('./pages/admin/connexion/connexion.component').then(m => m.ConnexionComponent),
-    canActivate: [guestGuard]  // Redirige si déjà connecté
-  },
+  // Route /connexion supprimée
   {
     path: 'forgotpassword',
     component: ForgotPasswordComponent
