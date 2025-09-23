@@ -14,18 +14,19 @@
           <h1 class="brand-title">Annuaire Interne</h1>
           <p class="brand-subtitle">Trouvez rapidement vos collègues</p>
         </div>
-      </div>
+      </div> 
 
       <!-- Navigation / Actions -->
       <nav class="header-actions">
         <!-- Non connecté -->
         <div *ngIf="!isLoggedIn">
           <button type="button" class="btn-modern" (click)="onLogin()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 1L21 5V11C21 16.55 17.16 21.74 12 23C6.84 21.74 3 16.55 3 11V5L12 1Z" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
             Se connecter
           </button>
         </div>
-
-        <!-- Connecté -->
         <div *ngIf="isLoggedIn" class="user-actions">
           <span>Bonjour {{ currentUser?.preferred_username || currentUser?.sub }}</span>
           <button type="button" class="btn-modern" (click)="goToAdmin()">

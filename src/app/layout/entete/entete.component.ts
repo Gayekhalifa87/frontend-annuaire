@@ -34,17 +34,13 @@ export class EnteteComponent implements OnInit {
     });
   }
   
-  /** Navigation vers login */
-    onLogin() {
-      console.log('🔐 Redirection vers login...');
-      if (this.keycloakService.isLoggedIn()) {
-        this.keycloakService.logout().then(() => {
-          this.keycloakService.login();
-        });
-      } else {
-        this.keycloakService.login();
-      }
-    }
+  /** Navigation vers login (toujours forcer la déconnexion avant connexion) */
+  onLogin() {
+    console.log('🔐 Redirection vers login...');
+    this.keycloakService.logout('/accueil').then(() => {
+      this.keycloakService.login();
+    });
+  }
 
   /** Déconnexion */
   onLogout() {
