@@ -12,6 +12,7 @@ import { Employe } from '../../core/employe.service';
 })
 export class SearchComponent {
   searchTerm: string = '';
+  isSearching: boolean = false;
 
   @Input() employees: Employe[] = [];
   employes: Employe[] = [];
@@ -26,22 +27,34 @@ export class SearchComponent {
       return;
     }
 
-    const term = this.searchTerm.toLowerCase();
+    // Animation de recherche
+    this.isSearching = true;
+    
+    // Simulation d'un délai de recherche pour l'effet visuel
+    setTimeout(() => {
+      const term = this.searchTerm.toLowerCase();
 
-    this.employes = this.employees.filter(emp =>
-      (emp.nom?.toLowerCase().includes(term)) ||
-      (emp.prenom?.toLowerCase().includes(term)) ||
-      (emp.ip?.toString().includes(term))
-    );
+      this.employes = this.employees.filter(emp =>
+        (emp.nom?.toLowerCase().includes(term)) ||
+        (emp.prenom?.toLowerCase().includes(term)) ||
+        (emp.ip?.toString().includes(term))
+      );
 
-    this.searchEvent.emit(this.employes);
+      this.searchEvent.emit(this.employes);
+      this.isSearching = false;
+    }, 500);
   }
 
   clearSearch() {
-  this.searchTerm = '';
-  this.employes = [];
-  // Émettre un événement pour dire au parent "la recherche est vide"
-  this.clearEvent.emit();
-}
+    this.searchTerm = '';
+    this.employes = [];
+    this.isSearching = false;
+    // Émettre un événement pour dire au parent "la recherche est vide"
+    this.clearEvent.emit();
+  }
 
+  quickSearch(filter: string) {
+    this.searchTerm = filter;
+    this.onSearch();
+  }
 }

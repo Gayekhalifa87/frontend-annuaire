@@ -60,8 +60,13 @@
   <br>
 
   <!-- Barre de recherche -->
-  <app-search 
+ <!--  <app-search 
   [employees]="employees"
+  (searchEvent)="onSearchResult($event)"
+  (clearEvent)="loadEmployees()">
+</app-search> -->
+<app-search 
+  [employees]="employes"
   (searchEvent)="onSearchResult($event)"
   (clearEvent)="loadEmployees()">
 </app-search>

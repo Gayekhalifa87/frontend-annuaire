@@ -270,6 +270,12 @@ h1 {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.modal.fade.show {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .form-label {
   font-weight: 600;
