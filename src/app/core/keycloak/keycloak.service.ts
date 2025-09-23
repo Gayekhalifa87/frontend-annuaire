@@ -30,6 +30,7 @@ export class KeycloakService {
       if (this.isLoggedIn()) {
         console.log('✅ Connecté, token :', this.getToken());
         console.log('👤 Profil utilisateur :', this.getUserProfile());
+        redirectUri: window.location.origin + '/admin'
       }
     }).catch(err => {
       console.error('❌ Erreur Keycloak init :', err);

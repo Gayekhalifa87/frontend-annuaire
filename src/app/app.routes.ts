@@ -8,6 +8,7 @@ import { KeycloakService } from './core/keycloak/keycloak.service';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { AuthGuard } from './core/keycloak/core/keycloak/auth.guard';
+import { AdminComponent } from './pages/admin';
 
 // Guard pour protéger les routes (connecté)
 export const authGuard = () => {
@@ -52,7 +53,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/login/login.component').then(m => m.LoginComponent),
     canActivate: [guestGuard]  // Redirige si déjà connecté
   },
-  // Route /connexion supprimée
   {
     path: 'forgotpassword',
     component: ForgotPasswordComponent
@@ -65,8 +65,9 @@ export const routes: Routes = [
   // Routes protégées (nécessitent d’être connecté)
   { 
     path: 'admin',
-    loadComponent: () => import('./pages/admin/admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [AuthGuard, authGuard]  // AuthGuard Keycloak + notre guard local
+    /* loadComponent: () => import('./pages/admin/admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [AuthGuard, authGuard]  */ // AuthGuard Keycloak + notre guard local
+    component: AdminComponent
   },
   { 
     path: 'recherche',
