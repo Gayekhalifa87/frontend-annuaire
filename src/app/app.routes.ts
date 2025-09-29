@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { AuthGuard } from './core/keycloak/core/keycloak/auth.guard';
 import { AdminComponent } from './pages/admin';
+import { EmployesComponent } from './pages/admin/employes/employes.component';
 
 // Guard pour protéger les routes (connecté)
 export const authGuard = () => {
@@ -68,6 +69,10 @@ export const routes: Routes = [
     /* loadComponent: () => import('./pages/admin/admin/admin.component').then(m => m.AdminComponent),
     canActivate: [AuthGuard, authGuard]  */ // AuthGuard Keycloak + notre guard local
     component: AdminComponent
+  },
+  {
+    path: 'employes',
+    component: EmployesComponent,
   },
   { 
     path: 'recherche',

@@ -6,7 +6,7 @@ import Keycloak, { KeycloakInstance } from 'keycloak-js';
 })  
 export class KeycloakService {
   private keycloak!: KeycloakInstance;
-  private initialized = false; // ✅ Changé de true à false
+  private initialized = false; 
   private initPromise: Promise<void> | null = null;
 
   /** Initialisation Keycloak */
@@ -27,9 +27,9 @@ export class KeycloakService {
       this.initialized = true;
       console.log('🔧 Keycloak initialisé, authentifié :', authenticated);
       
-      if (this.isLoggedIn()) {
+      if (this.isLoggedIn()) {/* 
         console.log('✅ Connecté, token :', this.getToken());
-        console.log('👤 Profil utilisateur :', this.getUserProfile());
+        console.log('👤 Profil utilisateur :', this.getUserProfile()); */
         redirectUri: window.location.origin + '/admin'
       }
     }).catch(err => {
@@ -102,8 +102,4 @@ export class KeycloakService {
     }
   }
 
-  // ✅ Méthode utile pour débugger
-  getKeycloakInstance(): KeycloakInstance | null {
-    return this.keycloak || null;
-  }
 }

@@ -47,8 +47,8 @@ export class AdminComponent {
       direction: ['', Validators.required],
       service: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      ip: ['', Validators.required],
-      telephone: ['', Validators.required],
+      ip: [''],
+      telephone: [''],
       role: ['user', Validators.required],
     });
   }
@@ -207,6 +207,7 @@ export class AdminComponent {
     this.authService.logout();
     this.router.navigate(['/accueil']);
   }
+
 
 
 }
