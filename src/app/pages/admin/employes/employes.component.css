@@ -1,11 +1,11 @@
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #191970,  0%, #4338ca 100%);
   border: none;
   color: white;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #5568d3 0%, #63408b 100%);
+  background: linear-gradient(135deg, #4338ca 0%, #191970 100%);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
@@ -138,10 +138,12 @@
 /* Modal */
 .modal-content {
   border: none;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #191970 100%);
   color: white;
   border-radius: 15px 15px 0 0;
   padding: 1.5rem;
@@ -182,23 +184,23 @@
 }
 
 .bg-warning {
-  background-color: #ffc107 !important;
+  background-color: #191970 !important;
 }
 .container-fluid {
   margin-bottom: 2rem;
 }
 
 #titre {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #191970 100%);
   color: white;
   padding: 2rem 1rem;
-  border-radius: 15px;
+  border-radius: 12px;
   margin-bottom: 2rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 #icone {
-  color: #ffd700;
+  color: #ffff;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
@@ -206,6 +208,10 @@
   font-size: 1.1rem;
   opacity: 0.9;
   margin: 0;
+}
+p { 
+  font-style: italic;
+  
 }
 
 .gestion {
@@ -286,11 +292,23 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #191970 100%);
   border: none;
   color: white;
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #5568d3 0%, #63408b 100%);
+  background: linear-gradient(135deg, #5568d3 0%, #191970 100%);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+input[type="text"] {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 1rem;
+  transition: border-color 0.3s ease;
 }

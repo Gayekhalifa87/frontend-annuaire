@@ -1,4 +1,3 @@
-// MODIFIER votre fichier employe.service.ts existant
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +14,10 @@ export interface Employe {
   matricule?: string;
   password?: string;
   email?: string;
-  direction?: string;
+  direction?: {
+    name?: string; 
+    code?: string;
+  };
   service?: string;
   poste?: string;
 }
@@ -28,7 +30,7 @@ export interface ExternalAgent {
   email: string;
   telephone: string;
   direction?: {
-    nom: string;
+    name: string;
     code: string;
   };
   fonction?: {
@@ -38,7 +40,7 @@ export interface ExternalAgent {
   active: boolean;
 }
 
-export interface ExternalAgentResponse {
+/* export interface ExternalAgentResponse {
   content: ExternalAgent[];
   totalPages: number;
   totalElements: number;
@@ -46,6 +48,12 @@ export interface ExternalAgentResponse {
   last: boolean;
   size: number;
   number: number;
+} */
+export interface ExternalAgentResponse {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  results: ExternalAgent[]; // Le tableau est dans la propriété "results"
 }
 
 @Injectable({
@@ -54,7 +62,7 @@ export interface ExternalAgentResponse {
 export class EmployeService {
 
   private apiUrl = 'http://localhost:8080/api/employes';
-  private externalApiUrl = 'http://10.106.136.126:9003/api/v1/agent2/agent';
+  private externalApiUrl = 'api/v1/agent2/agent';
 
   constructor(private http: HttpClient) { }
 
@@ -79,25 +87,21 @@ export class EmployeService {
     return this.http.get<Employe>(`${this.apiUrl}/search`, { params: { ip: ip.toString() } });
   }
 
-  // ✅ AJOUTER ces nouvelles méthodes pour l'API externe
-  
-  // Récupérer tous les agents externes avec pagination
-  getAllExternalAgents(page: number = 0, size: number = 20): Observable<ExternalAgentResponse> {
-    return this.http.get<ExternalAgentResponse>(`${this.externalApiUrl}?page=${page}&size=${size}`);
-  }
 
-  // Récupérer un agent externe par son ID
+  getAllExternalAgents(page: number = 0, size: number = 10): Observable<ExternalAgentResponse> {
+  return this.http.get<ExternalAgentResponse>(`${this.externalApiUrl}?page=${page}&size=${size}`);
+}
+
   getExternalAgentById(id: number): Observable<ExternalAgent> {
     return this.http.get<ExternalAgent>(`${this.externalApiUrl}/${id}`);
   }
 
-  // Tester la connexion à l'API externe
-  testExternalConnection(): Observable<string> {
-    return this.http.get(`${this.externalApiUrl}/test`, { responseType: 'text' });
-  }
-
-  // ✅ AJOUTER cette méthode pour créer un employé
-  createEmploye(employe: Employe): Observable<Employe> {
+  addEmploye(employe: Employe): Observable<Employe> {
     return this.http.post<Employe>(this.apiUrl, employe);
   }
+
+
+
+
+
 }

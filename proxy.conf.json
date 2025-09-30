@@ -1,0 +1,8 @@
+{
+  "/api/v1/agent2": {
+    "target": "http://10.106.136.126:9003",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
