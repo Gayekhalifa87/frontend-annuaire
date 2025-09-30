@@ -77,14 +77,28 @@
         <span class="text-muted">Matricule : {{ agent.matricule }}</span><br>
         <span class="text-muted">{{ agent.email }}</span><br>
         <small class="text-muted d-block">Tél : {{ agent.telephone }}</small>
+        
+        <!-- Afficher l'IP si déjà assigné -->
+        <span class="badge bg-success mt-1" *ngIf="agent.ip">
+          IP: {{ agent.ip }}
+        </span>
       </div>
     </div>
-    <!-- Bouton Ajouter -->
-  <button class="btn btn-primary btn-sm" (click)="openAddEmploye(agent)">
-    <i class="bi bi-plus-circle"></i> Assigner
-  </button>
+    
+    <!-- Bouton Assigner seulement si pas encore assigné -->
+    <button class="btn btn-primary btn-sm" 
+            (click)="openAddEmploye(agent)"
+            *ngIf="!agent.ip">
+      <i class="bi bi-plus-circle"></i> Assigner
+    </button>
+    
+    <!-- Badge si déjà assigné -->
+    <span class="badge bg-info" *ngIf="agent.ip">
+      Déjà assigné
+    </span>
   </li>
 </ul>
+
 
 <!-- Modal d'ajout employé -->
 <div class="modal fade" id="addEmployeModal" tabindex="-1" aria-hidden="true">
@@ -97,8 +111,16 @@
       <div class="modal-body">
         <form>
           <div class="mb-3">
+            <label class="form-label">Prénom nom</label>
+            <input type="text" class="form-control" id="champs" [(ngModel)]="newEmploye.prenom" name="prenom" placeholder=" {{selectedAgent?.fullName}} " readonly>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Matricule</label>
+            <input type="text" class="form-control" id="champs" [(ngModel)]="newEmploye.matricule" name="matricule" placeholder=" {{selectedAgent?.matricule}} " readonly>  
+          </div>
+          <div class="mb-3">
             <label class="form-label">Téléphone</label>
-            <input type="text" class="form-control" [(ngModel)]="newEmploye.telephone" name="telephone">
+            <input type="text" class="form-control" [(ngModel)]="newEmploye.telephone" name="telephone" placeholder="numero de telephone">
           </div>
           <div class="mb-3">
             <label class="form-label"> IP</label>

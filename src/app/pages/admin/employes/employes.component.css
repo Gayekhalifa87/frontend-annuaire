@@ -138,8 +138,6 @@
 /* Modal */
 .modal-content {
   border: none;
-  justify-content: center;
-  align-items: center;
 }
 
 .modal-header {
@@ -311,4 +309,17 @@ input[type="text"] {
   border: 1px solid #ced4da;
   padding: 0.5rem 1rem;
   transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  outline: none;
+}
+#champs {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 1rem;
+  transition: border-color 0.3s ease;
+  font-weight: bold;
 }

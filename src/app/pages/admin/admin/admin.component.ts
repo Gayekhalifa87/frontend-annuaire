@@ -26,6 +26,8 @@ export class AdminComponent {
   editingEmployeeId: number | null = null;
   employes: Employe[] = [];
 
+ 
+
   // Pagination
   currentPage = 0;
   pageSize = 6; 
@@ -33,6 +35,7 @@ export class AdminComponent {
   pages: number[] = [];
 
 @Input() user: any;
+filteredAgents: any;
 
   constructor(
     private employeService: EmployeService,
@@ -63,6 +66,7 @@ export class AdminComponent {
       next: (emps) => {
         this.employes = emps;
         this.calculatePagination();
+        console.log('Employés chargés :', this.employes);
       },
       error: (err) => console.error('Erreur lors du chargement des employés', err)
     });
@@ -110,7 +114,7 @@ export class AdminComponent {
     this.showAddForm = true;
   }
 
-  updateEmploye() {
+/*   updateEmploye() {
   if (!this.editingEmployeeId) return;
 
   const updatedData: Partial<Employe> = {};
@@ -130,7 +134,45 @@ export class AdminComponent {
       },
       error: (err) => console.error('Erreur lors de la mise à jour :', err)
     });
+} */
+
+    updateEmploye() {
+  if (!this.editingEmployeeId) return;
+
+  const updatedData: Partial<Employe> = {};
+  if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
+  if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
+  if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
+
+  this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
+    .subscribe({
+      next: (updatedEmp) => {
+        this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
+        this.resetForm();
+        Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
+        this.loadEmployees(); 
+        this.calculatePagination(); 
+      },
+      error: (err: any) => {
+        console.error('Erreur lors de la mise à jour :', err);
+
+        // Récupérer le message du backend si disponible
+        let message = 'Erreur lors de la mise à jour ❌';
+        if (err.error && err.error.message) {
+          message = err.error.message;
+        } else if (err.status === 400) {
+          message = 'Requête invalide';
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: message
+        });
+      }
+    });
 }
+
 
   /** 🔹 Supprimer un employé */
   deleteEmployee(emp: Employe) {

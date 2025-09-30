@@ -20,18 +20,20 @@
 
             <li><hr class="dropdown-divider"></li>
 
+                        <li>
+            <a class="dropdown-item text-primary" [routerLink]="['/employes']">
+              <i class="bi bi-people me-2"></i>
+              Employés
+            </a>
+            </li>
+
             <li>
               <a class="dropdown-item text-danger" (click)="onLogout()">
                 <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
               </a>
             </li>
 
-            <li>
-            <a class="dropdown-item text-primary" [routerLink]="['/employes']">
-              <i class="bi bi-people me-2"></i>
-              Employés
-            </a>
-            </li>
+
            </ul>
 
         </div>
@@ -45,14 +47,14 @@
   <div class="card-container">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Total employés</h5>
-        <p class="card-text"><span class="stat-number">{{ employees.length }}</span></p>
+        <h5 class="card-title">Total employés </h5>
+        <p class="card-text"><span class="stat-number">{{ employes.length }}</span></p>
       </div>
     </div>
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Total départements</h5>
-        <p class="card-text">2</p>
+        <p class="card-text"></p>
       </div>
     </div>
     <div class="card">
@@ -79,8 +81,8 @@
         <i class="bi bi-person-fill text-secondary ms-2" *ngIf="emp.role?.toUpperCase() !== 'ADMIN'" title="User"></i>
         <div class="ms-3">
           <div class="fw-bold">{{ emp.nom }} {{ emp.prenom }}</div>
-          <span class="text-muted">{{ emp.matricule }}</span><br>
-          <span class="text-muted">{{ emp.nom }}</span>
+          <span class="text-muted">{{ emp.email }}</span><br>
+          <span class="text-muted">{{ emp.telephone }}</span>
           <small class="text-muted d-block">IP : {{ emp.ip }}</small>
         </div>
       </div>

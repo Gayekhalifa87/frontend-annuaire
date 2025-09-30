@@ -35,6 +35,7 @@ export class AccueilComponent implements OnInit {
         this.employees = res;
         this.filteredEmployees = []; 
         this.updatePagination(this.employees.length);
+        console.log('Employés chargés :', this.employees);
       });
   }
 

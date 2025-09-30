@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { Employe, EmployeService, ExternalAgent } from '../../../core/employe.service';
 import { AuthService } from '../../../core/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employes',
@@ -26,30 +27,42 @@ export class EmployesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadExternalAgents();
+    this.loadExternalAgents();  
   }
 
   loadExternalAgents(): void {
-    this.isLoading = true;
-    this.error = null;
-    this.employeService.getAllExternalAgents(0, 100000).subscribe({
-      next: (response) => {
-        this.agents = response.results || [];
-        // Trier puis initialiser filteredAgents
-        this.sortAgents(this.agents);
-        this.filteredAgents = [...this.agents];
-        this.isLoading = false;
-        console.log('Agents chargés :', this.agents);
-      },
-      error: (err) => {
-        console.error('Erreur :', err);
-        this.error = 'Impossible de charger la liste des agents.';
-        this.agents = [];
-        this.filteredAgents = [];
-        this.isLoading = false;
-      }
-    });
-  }
+  this.isLoading = true;
+  this.error = null;
+  
+  this.employeService.getAllExternalAgents(0, 100000).subscribe({
+    next: (response) => {
+      this.agents = response.results || [];
+      
+      // Récupérer les employés locaux pour savoir qui est déjà assigné
+      this.employeService.getAllCombinedEmployes().subscribe({
+        next: (combined) => {
+          // Marquer les agents déjà assignés avec leur IP
+          this.agents.forEach(agent => {
+            const assigned = combined.find(emp => emp.employeId === agent.id);
+            if (assigned) {
+              agent.ip = assigned.ip;
+
+            }
+          });
+          
+          this.sortAgents(this.agents);
+          this.filteredAgents = [...this.agents];
+          this.isLoading = false;
+        }
+      });
+    },
+    error: (err) => {
+      console.error('Erreur :', err);
+      this.error = 'Impossible de charger la liste des agents.';
+      this.isLoading = false;
+    }
+  });
+}
 
   /** Recherche live + tri automatique */
   onSearch(): void {
@@ -114,20 +127,100 @@ openAddEmploye(agent: ExternalAgent): void {
   modal.show();
 }
 
-addEmploye(): void {
+/* addEmploye(): void {
   if (!this.newEmploye || !this.newEmploye.employeId) return;
 
   this.employeService.addEmploye(this.newEmploye).subscribe({
     next: (res) => {
       console.log('Employé ajouté avec succès :', res);
-      alert('Employé ajouté avec succès ✅');
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: `Employé ajouté avec succès !`,
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      // Fermer le modal Bootstrap si ouvert
+      const modal = (window as any).bootstrap.Modal.getInstance(
+        document.getElementById('addEmployeModal')
+      );
+      modal?.hide();
+
+      // Recharger la liste des agents
+      this.loadExternalAgents();
     },
     error: (err) => {
       console.error('Erreur ajout employé :', err);
-      alert('Erreur lors de l’ajout ❌');
+
+      // Gestion spécifique du message d’erreur renvoyé par le backend
+      let message = 'Erreur lors de l’ajout ❌';
+      if (err.error && err.error.message) {
+        message = err.error.message; // Exemple : "Cette IP est déjà attribuée à un autre employé."
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: message,
+        timer: 3000,
+        showConfirmButton: true
+      });
+    }
+  });
+} */
+
+  addEmploye(): void {
+  if (!this.newEmploye || !this.newEmploye.employeId) return;
+
+  this.employeService.addEmploye(this.newEmploye).subscribe({
+    next: (res) => {
+      console.log('Employé ajouté avec succès :', res);
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: `Employé ajouté avec succès !`,
+        timer: 2000,
+        showConfirmButton: false
+      });
+      // Réinitialiser le formulaire et fermer le modal
+      this.newEmploye = {
+        employeId: 0,
+        ip: undefined,
+        telephone: '',
+        role: 'USER',
+        password: 'ChangeMe123!'
+      };
+      this.selectedAgent = null;
+      const modalEl = document.getElementById('addEmployeModal');
+      if (modalEl) {
+        const modal = (window as any).bootstrap.Modal.getInstance(modalEl);
+        modal?.hide();
+      }
+
+      // Recharger la liste des agents pour voir la nouvelle IP
+      this.loadExternalAgents();
+    },
+    error: (err) => {
+      console.error('Erreur ajout employé :', err);
+
+      // Vérifie si le backend a renvoyé un message
+      let message = 'Erreur lors de l’ajout ❌';
+      if (err.error && err.error.message) {
+        message = err.error.message;
+      } else if (err.status === 400) {
+        message = 'IP ou téléphone déjà utilisé pour cet employé !';
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: message
+      });
     }
   });
 }
+
 
 
   retour(): void {

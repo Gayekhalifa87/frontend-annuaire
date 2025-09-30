@@ -24,6 +24,7 @@ export interface Employe {
 
 // ✅ AJOUTER ces nouvelles interfaces pour l'API externe
 export interface ExternalAgent {
+  ip: number | undefined;
   id: number;
   fullName: string;
   matricule: String;
@@ -40,15 +41,6 @@ export interface ExternalAgent {
   active: boolean;
 }
 
-/* export interface ExternalAgentResponse {
-  content: ExternalAgent[];
-  totalPages: number;
-  totalElements: number;
-  first: boolean;
-  last: boolean;
-  size: number;
-  number: number;
-} */
 export interface ExternalAgentResponse {
   totalItems: number;
   totalPages: number;
@@ -99,9 +91,4 @@ export class EmployeService {
   addEmploye(employe: Employe): Observable<Employe> {
     return this.http.post<Employe>(this.apiUrl, employe);
   }
-
-
-
-
-
 }
