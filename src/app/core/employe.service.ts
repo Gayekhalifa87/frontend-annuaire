@@ -22,14 +22,13 @@ export interface Employe {
   poste?: string;
 }
 
-// ✅ AJOUTER ces nouvelles interfaces pour l'API externe
 export interface ExternalAgent {
   id: number;
   fullName: string;
-  matricule: number;  // C'est un number dans l'API
+  matricule: number;  
   email: string;
   telephone: string;
-  ip?: number; // Pour afficher si déjà assigné
+  ip?: number; 
   
   // Structure complète de direction
   direction?: {
@@ -68,7 +67,7 @@ export interface ExternalAgentResponse {
   totalItems: number;
   totalPages: number;
   currentPage: number;
-  results: ExternalAgent[]; // Le tableau est dans la propriété "results"
+  results: ExternalAgent[];
 }
 
 @Injectable({

@@ -1,15 +1,16 @@
 /* Directory Section */
 .directory-section {
-  padding: var(--spacing-8) 0;
-  min-height: 70vh;
-  background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
-}
+padding: var(--spacing-8) 0;
+min-height: 70vh;
+background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
+} 
+
 
 /* Directory Statistics */
-.directory-stats {
-  margin-bottom: var(--spacing-8);
-  display: flex;
-  justify-content: center;
+.directory-section {
+    margin: 0; /* Pour éliminer toute marge */
+    padding: var(--spacing-8) 0; /* Garde le padding vertical */
+    width: 100%; /* Assurez-vous que la largeur est pleine */
 }
 
 .stat-card {
@@ -64,9 +65,9 @@
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-4);
   margin-bottom: var(--spacing-10);
-  max-width: 1800px;
+  width: 100%;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto; 
 }
 
 /* Employee Card */
