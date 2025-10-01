@@ -24,20 +24,43 @@ export interface Employe {
 
 // ✅ AJOUTER ces nouvelles interfaces pour l'API externe
 export interface ExternalAgent {
-  ip: number | undefined;
   id: number;
   fullName: string;
-  matricule: String;
+  matricule: number;  // C'est un number dans l'API
   email: string;
   telephone: string;
+  ip?: number; // Pour afficher si déjà assigné
+  
+  // Structure complète de direction
   direction?: {
+    id: number;
+    active: boolean;
     name: string;
     code: string;
   };
+  
+  // Structure complète de fonction
   fonction?: {
-    nom: string;
+    id: number;
+    active: boolean;
+    name: string;
     code: string;
   };
+  
+  // Structure complète de rattachement (service)
+  rattachement?: {
+    id: number;
+    active: boolean;
+    code: string;
+    name: string;
+    type?: {
+      id: number;
+      active: boolean;
+      code: string;
+      name: string;
+    };
+  };
+  
   active: boolean;
 }
 
@@ -58,7 +81,6 @@ export class EmployeService {
 
   constructor(private http: HttpClient) { }
 
-  // Méthodes existantes...
   getAllCombinedEmployes(): Observable<Employe[]> {
     return this.http.get<Employe[]>(`${this.apiUrl}/combined`);
   }
@@ -78,7 +100,6 @@ export class EmployeService {
   searchByIp(ip: number): Observable<Employe | null> {
     return this.http.get<Employe>(`${this.apiUrl}/search`, { params: { ip: ip.toString() } });
   }
-
 
   getAllExternalAgents(page: number = 0, size: number = 10): Observable<ExternalAgentResponse> {
   return this.http.get<ExternalAgentResponse>(`${this.externalApiUrl}?page=${page}&size=${size}`);
