@@ -100,7 +100,7 @@ export class EmployeService {
     return this.http.get<Employe>(`${this.apiUrl}/search`, { params: { ip: ip.toString() } });
   }
 
-  getAllExternalAgents(page: number = 0, size: number = 10): Observable<ExternalAgentResponse> {
+  getAllExternalAgents(page: number = 0, size: number = 100000): Observable<ExternalAgentResponse> {
   return this.http.get<ExternalAgentResponse>(`${this.externalApiUrl}?page=${page}&size=${size}`);
 }
 

@@ -49,11 +49,7 @@ export const routes: Routes = [
     path: 'accueil', 
     loadComponent: () => import('./pages/collaborateur/accueil/accueil.component').then(m => m.AccueilComponent)
   },
-  {
-    path: 'login',
-    loadComponent: () => import('./pages/admin/login/login.component').then(m => m.LoginComponent),
-    canActivate: [guestGuard]  // Redirige si déjà connecté
-  },
+
   {
     path: 'forgotpassword',
     component: ForgotPasswordComponent

@@ -8,6 +8,7 @@ import { RouterLink } from "@angular/router";
 import { Input } from '@angular/core';
 import { AuthService } from '../../../core/auth.service';
 import { Router } from '@angular/router';
+import { SharedDataService } from '../../../core/shared-data.service';
 
 @Component({
   selector: 'app-admin',
@@ -19,6 +20,7 @@ import { Router } from '@angular/router';
 export class AdminComponent {
 
   employees: Employe[] = [];
+  totalAgents: number = 0;
 
   addEmployeeForm: FormGroup;
   showAddForm = false;
@@ -26,19 +28,18 @@ export class AdminComponent {
   editingEmployeeId: number | null = null;
   employes: Employe[] = [];
 
- 
-
   // Pagination
   currentPage = 0;
   pageSize = 6; 
   totalPages = 0;
   pages: number[] = [];
 
-@Input() user: any;
-filteredAgents: any;
+  @Input() user: any;
+  filteredAgents: any;
 
   constructor(
     private employeService: EmployeService,
+    private sharedDataService: SharedDataService,
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder
@@ -58,6 +59,19 @@ filteredAgents: any;
 
   ngOnInit() {
     this.loadEmployees();
+    this.loadTotalAgents();  // ✅ Charger le total des agents externes
+  }
+
+  /** 🔹 Charger le total des agents externes */
+  loadTotalAgents() {
+    this.employeService.getAllExternalAgents(0, 100000).subscribe({
+      next: (response) => {
+        this.totalAgents = response.results?.length || 0;
+        // Mettre à jour le service partagé pour les autres composants
+        this.sharedDataService.setTotalAgents(this.totalAgents);
+      },
+      error: (err) => console.error('Erreur lors du chargement des agents externes', err)
+    });
   }
 
   /** 🔹 Charger tous les employés et calculer pagination */
@@ -84,9 +98,9 @@ filteredAgents: any;
 
   /** 🔹 Getter pour les employés de la page actuelle */
   get paginatedEmployes(): Employe[] {
-  const start = this.currentPage * this.pageSize;
-  return this.employes.slice(start, start + this.pageSize);
-}
+    const start = this.currentPage * this.pageSize;
+    return this.employes.slice(start, start + this.pageSize);
+  }
 
   /** 🔹 Pagination navigation */
   goToPreviousPage() {
@@ -114,65 +128,41 @@ filteredAgents: any;
     this.showAddForm = true;
   }
 
-/*   updateEmploye() {
-  if (!this.editingEmployeeId) return;
+  updateEmploye() {
+    if (!this.editingEmployeeId) return;
 
-  const updatedData: Partial<Employe> = {};
-  if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
-  if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
-  if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
+    const updatedData: Partial<Employe> = {};
+    if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
+    if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
+    if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
 
-  this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
-    .subscribe({
-      next: (updatedEmp) => {
-        // Mise à jour locale de la liste
-        this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
-        this.resetForm();
-        Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
-        this.loadEmployees(); 
-        this.calculatePagination(); 
-      },
-      error: (err) => console.error('Erreur lors de la mise à jour :', err)
-    });
-} */
+    this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
+      .subscribe({
+        next: (updatedEmp) => {
+          this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
+          this.resetForm();
+          Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
+          this.loadEmployees(); 
+          this.calculatePagination(); 
+        },
+        error: (err: any) => {
+          console.error('Erreur lors de la mise à jour :', err);
 
-    updateEmploye() {
-  if (!this.editingEmployeeId) return;
+          let message = 'Erreur lors de la mise à jour ❌';
+          if (err.error && err.error.message) {
+            message = err.error.message;
+          } else if (err.status === 400) {
+            message = 'Requête invalide';
+          }
 
-  const updatedData: Partial<Employe> = {};
-  if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
-  if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
-  if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
-
-  this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
-    .subscribe({
-      next: (updatedEmp) => {
-        this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
-        this.resetForm();
-        Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
-        this.loadEmployees(); 
-        this.calculatePagination(); 
-      },
-      error: (err: any) => {
-        console.error('Erreur lors de la mise à jour :', err);
-
-        // Récupérer le message du backend si disponible
-        let message = 'Erreur lors de la mise à jour ❌';
-        if (err.error && err.error.message) {
-          message = err.error.message;
-        } else if (err.status === 400) {
-          message = 'Requête invalide';
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: message
+          });
         }
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur',
-          text: message
-        });
-      }
-    });
-}
-
+      });
+  }
 
   /** 🔹 Supprimer un employé */
   deleteEmployee(emp: Employe) {
@@ -207,21 +197,20 @@ filteredAgents: any;
   switchRole(emp: Employe) {
     if (!emp.id) return;
     this.employeService.switchRole(emp.id).subscribe({
-  next: (updatedEmp) => { // updatedEmp est un Employe
-    this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
-    Swal.fire({ 
-      icon: 'success', 
-      title: 'Succès', 
-      text: `Le rôle de ${updatedEmp.nom} est maintenant ${updatedEmp.role}`, 
-      timer: 2000, 
-      showConfirmButton: false 
+      next: (updatedEmp) => {
+        this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
+        Swal.fire({ 
+          icon: 'success', 
+          title: 'Succès', 
+          text: `Le rôle de ${updatedEmp.nom} est maintenant ${updatedEmp.role}`, 
+          timer: 2000, 
+          showConfirmButton: false 
+        });
+        this.calculatePagination();
+        this.loadEmployees();
+      },
+      error: () => Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de changer le rôle.' })
     });
-    this.calculatePagination();
-    this.loadEmployees();
-  },
-  error: () => Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de changer le rôle.' })
-});
-
   }
 
   /** 🔹 Réinitialiser le formulaire */
@@ -239,9 +228,7 @@ filteredAgents: any;
     this.currentPage = 0;
     this.calculatePagination();
     console.log('Résultats de la recherche :', results);
-
   }
-
 
   /** Déconnexion */
   onLogout() {
@@ -249,8 +236,4 @@ filteredAgents: any;
     this.authService.logout();
     this.router.navigate(['/accueil']);
   }
-
-
-
 }
-

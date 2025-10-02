@@ -47,20 +47,20 @@
   <div class="card-container">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Total employés </h5>
+        <h5 class="card-title"> employés de l annuaire</h5>
         <p class="card-text"><span class="stat-number">{{ employes.length }}</span></p>
       </div>
     </div>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Total départements</h5>
-        <p class="card-text"></p>
+        <h5 class="card-title">Total Agents</h5>
+        <p class="card-text">{{ totalAgents }}</p>
       </div>
     </div>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Total services</h5>
-        <p class="card-text">2</p>
+        <h5 class="card-title">Total agents sans telephone</h5>
+        <p class="card-text">{{ totalAgents - employes.length }}</p>
       </div>
     </div>
   </div>

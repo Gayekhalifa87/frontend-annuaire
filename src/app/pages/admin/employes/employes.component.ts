@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { Employe, EmployeService, ExternalAgent } from '../../../core/employe.service';
 import { AuthService } from '../../../core/auth.service';
+import { SharedDataService } from '../../../core/shared-data.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -31,7 +32,8 @@ export class EmployesComponent implements OnInit {
   constructor(
     private router: Router,
     private employeService: EmployeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private sharedDataService: SharedDataService  
   ) {}
 
   ngOnInit(): void {
