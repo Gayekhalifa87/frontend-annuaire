@@ -24,9 +24,13 @@
             class="form-control mb-3" 
             [(ngModel)]="searchTerm"
             placeholder="🔍 Nom, matricule, email...">
+            <button class="btn btn-sm btn-outline-primary" (click)="showAgentList = !showAgentList">
+    <i class="bi" [ngClass]="showAgentList ? 'bi-eye-slash' : 'bi-eye'"></i>
+    {{ showAgentList ? 'Cacher' : 'Afficher' }} la liste
+  </button>
 
           <!-- Liste des agents -->
-          <div class="agent-list" style="max-height: 600px; overflow-y: auto;">
+          <div *ngIf="showAgentList" class="agent-list" style="max-height: 600px; overflow-y: auto;">
             <div 
               *ngFor="let agent of filteredAgents" 
               class="agent-item p-3 mb-2 border rounded cursor-pointer"

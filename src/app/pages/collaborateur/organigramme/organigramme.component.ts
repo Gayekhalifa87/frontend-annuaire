@@ -30,6 +30,8 @@ export class OrganigrammeComponent implements OnInit {
   hierarchy: HierarchyNode[] = [];
   isLoading = false;
 
+  showAgentList: boolean = true; // ✅ contrôle de l'affichage de la liste
+
   constructor(
     private employeService: EmployeService,
     private router: Router
@@ -38,6 +40,17 @@ export class OrganigrammeComponent implements OnInit {
   ngOnInit(): void {
     this.loadAgents();
   }
+
+  selectAgent(agent: ExternalAgent): void {
+  this.selectedAgent = agent;
+  this.buildHierarchy(agent);
+
+  // Fermer la liste sur les petits écrans
+  if (window.innerWidth < 768) { // <768px = taille mobile / tablette
+    this.showAgentList = false;
+  }
+}
+
 
   loadAgents(): void {
     this.isLoading = true;
@@ -66,11 +79,7 @@ export class OrganigrammeComponent implements OnInit {
     );
   }
 
-  // Sélectionner un agent et construire sa hiérarchie
-  selectAgent(agent: ExternalAgent): void {
-    this.selectedAgent = agent;
-    this.buildHierarchy(agent);
-  }
+ 
 
   // Construire la hiérarchie à partir d'un agent
   buildHierarchy(agent: ExternalAgent): void {
