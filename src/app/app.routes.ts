@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { AuthGuard } from './core/keycloak/core/keycloak/auth.guard';
 import { AdminComponent } from './pages/admin';
 import { EmployesComponent } from './pages/admin/employes/employes.component';
+import { OrganigrammeComponent } from './pages/collaborateur/organigramme/organigramme.component';
 
 // Guard pour protéger les routes (connecté)
 export const authGuard = () => {
@@ -79,6 +80,10 @@ export const routes: Routes = [
     path: 'parametres',
     component: ParametresComponent,
     canActivate: [AuthGuard, authGuard]
+  },
+  {
+    path: 'organigramme',
+    component: OrganigrammeComponent,
   },
 
 

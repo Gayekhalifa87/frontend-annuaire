@@ -503,6 +503,7 @@ h1 {
   border-radius: 8px;
   margin: 0.25rem;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .dropdown-item:hover {

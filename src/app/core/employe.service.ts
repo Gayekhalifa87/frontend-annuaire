@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -20,6 +19,17 @@ export interface Employe {
   };
   service?: string;
   poste?: string;
+}
+
+// ✅ Interface pour le chef hiérarchique (récursive)
+export interface ChefInfo {
+  id: number;
+  matricule: number;
+  fullName: string;
+  email: string;
+  fonction?: string;
+  direction?: string;
+  chef?: ChefInfo; // ✅ Récursif pour toute la hiérarchie
 }
 
 export interface ExternalAgent {
@@ -59,6 +69,9 @@ export interface ExternalAgent {
       name: string;
     };
   };
+  
+  // ✅ Chef hiérarchique
+  chef?: ChefInfo;
   
   active: boolean;
 }
@@ -101,8 +114,8 @@ export class EmployeService {
   }
 
   getAllExternalAgents(page: number = 0, size: number = 100000): Observable<ExternalAgentResponse> {
-  return this.http.get<ExternalAgentResponse>(`${this.externalApiUrl}?page=${page}&size=${size}`);
-}
+    return this.http.get<ExternalAgentResponse>(`${this.externalApiUrl}?page=${page}&size=${size}`);
+  }
 
   getExternalAgentById(id: number): Observable<ExternalAgent> {
     return this.http.get<ExternalAgent>(`${this.externalApiUrl}/${id}`);

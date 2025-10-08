@@ -18,7 +18,7 @@ export class AccueilComponent implements OnInit {
   filteredEmployees: Employe[] = [];   // Résultats de recherche
 
   currentPage = 0;
-  pageSize = 8; 
+  pageSize = 6; 
   totalPages = 0;
   pages: number[] = [];
 

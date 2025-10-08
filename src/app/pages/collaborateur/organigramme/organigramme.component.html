@@ -1,0 +1,125 @@
+<div class="container-fluid mt-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2><i class="bi bi-diagram-3"></i> Organigramme Hiérarchique</h2>
+      <p class="text-muted">Visualisez la structure organisationnelle</p>
+    </div>
+    <button class="btn btn-outline-secondary" (click)="retour()">
+      <i class="bi bi-arrow-left"></i> Retour
+    </button>
+  </div>
+
+  <div class="row">
+    <!-- Colonne de gauche : Liste des agents -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-search"></i> Rechercher un agent</h5>
+        </div>
+        <div class="card-body">
+          <!-- Champ de recherche -->
+          <input 
+            type="text" 
+            class="form-control mb-3" 
+            [(ngModel)]="searchTerm"
+            placeholder="🔍 Nom, matricule, email...">
+
+          <!-- Liste des agents -->
+          <div class="agent-list" style="max-height: 600px; overflow-y: auto;">
+            <div 
+              *ngFor="let agent of filteredAgents" 
+              class="agent-item p-3 mb-2 border rounded cursor-pointer"
+              [class.selected]="selectedAgent?.id === agent.id"
+              (click)="selectAgent(agent)"
+              style="cursor: pointer;">
+              <div class="fw-bold">{{ agent.fullName }}</div>
+              <small class="text-muted">{{ agent.fonction?.name }}</small><br>
+              <small class="text-muted">{{ agent.matricule }}</small>
+            </div>
+          </div>
+
+          <div *ngIf="isLoading" class="text-center py-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne de droite : Organigramme -->
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="bi bi-diagram-3-fill"></i> Hiérarchie</h5>
+        </div>
+        <div class="card-body" style="min-height: 400px;">
+          
+          <!-- Message si aucun agent sélectionné -->
+          <div *ngIf="!selectedAgent" class="text-center text-muted py-5">
+            <i class="bi bi-arrow-left-circle" style="font-size: 3rem;"></i>
+            <p class="mt-3">Sélectionnez un agent pour voir sa hiérarchie</p>
+          </div>
+
+          <!-- Affichage de l'organigramme -->
+          <div *ngIf="selectedAgent && hierarchy.length > 0" class="hierarchy-container">
+            
+            <!-- Parcourir la hiérarchie -->
+            <div *ngFor="let node of hierarchy; let i = index" class="hierarchy-level mb-4">
+              
+              <!-- Carte de l'agent -->
+              <div class="hierarchy-card" 
+                   [class.highlight]="node.id === selectedAgent.id"
+                   [style.margin-left.px]="node.level * 40">
+                
+                <div class="card border-primary shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle bg-primary text-white me-3">
+                        {{ node.fullName.charAt(0) }}
+                      </div>
+                      <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-bold">{{ node.fullName }}</h6>
+                        <small class="text-primary"> Matricule:{{ node.matricule }}</small><br><!-- 
+                        <small class="text-muted">{{ node.direction }}</small><br> -->
+                        <small class="text-muted">
+                          <i class="bi bi-envelope"></i> {{ node.email }}
+                        </small>
+                      </div>
+                      <div>
+                        <span class="badge bg-info">Niveau {{ hierarchy.length - i }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flèche vers le bas (sauf pour le dernier) -->
+              <div *ngIf="i < hierarchy.length - 1" class="text-center my-2">
+                <i class="bi bi-arrow-down-circle text-primary" style="font-size: 1.5rem;"></i>
+              </div>
+
+            </div>
+
+            <!-- Info supplémentaire -->
+            <div class="alert alert-info mt-4">
+              <i class="bi bi-info-circle"></i>
+              <strong>{{ selectedAgent.fullName }}</strong> rapporte à 
+              <strong>{{ hierarchy.length - 1 }}</strong> niveau(x) hiérarchique(s) 
+            </div>
+
+          </div>
+
+          <!-- Si pas de hiérarchie -->
+          <div *ngIf="selectedAgent && hierarchy.length === 0" class="text-center text-warning py-5">
+            <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
+            <p class="mt-3">Aucune hiérarchie trouvée pour cet agent</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
