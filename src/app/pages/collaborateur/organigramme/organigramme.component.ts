@@ -30,7 +30,7 @@ export class OrganigrammeComponent implements OnInit {
   hierarchy: HierarchyNode[] = [];
   isLoading = false;
 
-  showAgentList: boolean = true; // ✅ contrôle de l'affichage de la liste
+  showAgentList: boolean = true; 
 
   constructor(
     private employeService: EmployeService,
@@ -50,7 +50,6 @@ export class OrganigrammeComponent implements OnInit {
     this.showAgentList = false;
   }
 }
-
 
   loadAgents(): void {
     this.isLoading = true;
@@ -113,7 +112,7 @@ export class OrganigrammeComponent implements OnInit {
         children: []
       };
       chain.push(chefNode);
-      currentChef = currentChef.chef; // ✅ Peut être undefined
+      currentChef = currentChef.chef; 
     }
 
     // Inverser pour avoir le top manager en haut

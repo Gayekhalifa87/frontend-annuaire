@@ -61,13 +61,16 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
 
 /* Employees Grid */
 .employees-grid {
+  margin: 0 ;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+   grid-template-columns: repeat(4, minmax(400px, 1fr));
   gap: var(--spacing-4);
   margin-bottom: var(--spacing-10);
   width: 100%;
   margin-left: auto;
   margin-right: auto; 
+  padding: 10 10px; /* Correction: "10" → "var(--spacing-4)" */
+  margin-left: -200px;
 }
 
 /* Employee Card */
@@ -395,6 +398,21 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
 }
 
 /* Responsive Design */
+
+/* 4 colonnes pour les grands écrans */
+@media (min-width: 1600px) {
+  .employees-grid {
+    grid-template-columns: repeat(4, minmax(400px, 1fr));
+  }
+}
+
+/* 3 colonnes pour les écrans moyens */
+@media (max-width: 1599px) {
+  .employees-grid {
+    grid-template-columns: repeat(3, minmax(400px, 1fr));
+  }
+}
+
 @media (max-width: 1400px) {
   .employees-grid {
     margin: 0 var(--spacing-4);
@@ -402,13 +420,13 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   }
 }
 
+/* 2 colonnes pour les tablettes */
 @media (max-width: 1200px) {
   .employees-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-5);
-    max-width: 1200px;
+    grid-template-columns: repeat(2, minmax(400px, 1fr));
   }
 }
+
 
 @media (max-width: 1024px) {
   .employees-grid {
@@ -653,7 +671,7 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   .employee-card:nth-child(6) { animation-delay: 0.6s; }
 }
 
-@keyframes slideInUp {
+@keyframes slideInUp {  
   from {
     opacity: 0;
     transform: translateY(30px);

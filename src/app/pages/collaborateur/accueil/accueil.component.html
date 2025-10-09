@@ -22,13 +22,13 @@
         <header class="employee-primary">
           <div class="employee-avatar">
             <div class="avatar-circle">
-              <span class="avatar-initials">{{ getInitials(emp.nom + ' ' + emp.prenom) }}</span>
+              <span class="avatar-initials">{{ getInitials(emp.prenom + ' ' + emp.nom) }}</span>
               <div class="avatar-ring"></div>
             </div>
           </div>
           
           <div class="employee-identity">
-            <h2 class="employee-name">{{ emp.nom }} {{ emp.prenom }}</h2>
+            <h2 class="employee-name">{{ emp.prenom }} {{ emp.nom }}</h2>
             <div class="employee-id-badge">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
