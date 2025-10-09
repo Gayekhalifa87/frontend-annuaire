@@ -78,7 +78,7 @@ export class OrganigrammeComponent implements OnInit {
     );
   }
 
- 
+
 
   // Construire la hiérarchie à partir d'un agent
   buildHierarchy(agent: ExternalAgent): void {

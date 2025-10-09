@@ -61,7 +61,7 @@ export class KeycloakService {
   }
 
   /** Déconnexion avec redirection */
-  async logout(redirectUrl: string = '/accueil'): Promise<void> {
+  /* async logout(redirectUrl: string = '/accueil'): Promise<void> {
     if (!this.keycloak) return;
 
     try {
@@ -78,7 +78,24 @@ export class KeycloakService {
       // ✅ Fallback : redirection manuelle
       window.location.href = window.location.origin + redirectUrl;
     }
+  } */
+ async logout(redirectUrl: string = '/accueil'): Promise<void> {
+  if (!this.keycloak) return;
+  try {
+    await this.keycloak.logout({
+      redirectUri: window.location.origin + redirectUrl,
+    });
+    // 🔹 On supprime aussi manuellement les cookies de session
+    document.cookie.split(";").forEach(c => {
+      document.cookie = c.replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+  } catch (err) {
+    console.error('❌ Erreur logout Keycloak', err);
+    window.location.href = window.location.origin + redirectUrl;
   }
+}
+
 
   getToken(): string | null {
     return this.keycloak?.token ?? null;
