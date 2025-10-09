@@ -20,7 +20,7 @@ export class KeycloakService {
     });
 
     this.initPromise = this.keycloak.init({
-      onLoad: forceLogin ? 'login-required' : 'check-sso',
+      onLoad: 'check-sso',
       checkLoginIframe: false,
       silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html'
     }).then((authenticated) => {
@@ -54,11 +54,18 @@ export class KeycloakService {
     return this.initialized;
   }
 
-  login() {
+ /*  login() {
     this.keycloak.login({
       redirectUri: window.location.origin + '/admin'
     });
-  }
+  } */
+ login() {
+  this.keycloak.login({
+    redirectUri: window.location.origin + '/admin',
+    prompt: 'login'   // 🔹 Forcer affichage formulaire
+  });
+}
+
 
   /** Déconnexion avec redirection */
   /* async logout(redirectUrl: string = '/accueil'): Promise<void> {
@@ -79,13 +86,35 @@ export class KeycloakService {
       window.location.href = window.location.origin + redirectUrl;
     }
   } */
- async logout(redirectUrl: string = '/accueil'): Promise<void> {
+//  async logout(redirectUrl: string = '/accueil'): Promise<void> {
+//   if (!this.keycloak) return;
+//   try {
+//     await this.keycloak.logout({
+//       redirectUri: window.location.origin + redirectUrl,
+//     });
+//     // 🔹 On supprime aussi manuellement les cookies de session
+//     document.cookie.split(";").forEach(c => {
+//       document.cookie = c.replace(/^ +/, "")
+//         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+//     });
+//   } catch (err) {
+//     console.error('❌ Erreur logout Keycloak', err);
+//     window.location.href = window.location.origin + redirectUrl;
+//   }
+// }
+
+async logout(redirectUrl: string = '/accueil'): Promise<void> {
   if (!this.keycloak) return;
   try {
+    // 🔹 Nettoyage local immédiat
+    localStorage.clear();
+    sessionStorage.clear();
+
     await this.keycloak.logout({
       redirectUri: window.location.origin + redirectUrl,
     });
-    // 🔹 On supprime aussi manuellement les cookies de session
+
+    // 🔹 Supprimer aussi les cookies de session SSO
     document.cookie.split(";").forEach(c => {
       document.cookie = c.replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
