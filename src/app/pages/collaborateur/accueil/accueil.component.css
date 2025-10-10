@@ -1,90 +1,101 @@
-/* Directory Section */
+/* Variables - harmonisées avec le design admin */
+:root {
+  --primary: #191970;
+  --primary-hover: #2a2a8a;
+  --primary-light: rgba(25, 25, 112, 0.1);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-900: #0f172a;
+  
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Section principale */
 .directory-section {
-padding: var(--spacing-8) 0;
-min-height: 70vh;
-background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
-} 
-
-
-/* Directory Statistics */
-.directory-section {
-    margin: 0; /* Pour éliminer toute marge */
-    padding: var(--spacing-8) 0; /* Garde le padding vertical */
-    width: 100%; /* Assurez-vous que la largeur est pleine */
+  margin: 0;
+  padding: var(--spacing-8) 0;
+  width: 100%;
+  min-height: 70vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-4);
-  background: var(--white);
-  padding: var(--spacing-6);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--gray-200);
-  transition: all 0.3s ease;
+.directory-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: radial-gradient(circle at 50% 0%, rgba(25, 25, 112, 0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
+.container-modern {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-4);
+  position: relative;
+  z-index: 1;
 }
 
-.stat-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
-  border-radius: var(--radius-xl);
-  color: var(--primary);
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-number {
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
-  color: var(--gray-900);
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: var(--font-size-sm);
-  color: var(--gray-500);
-  font-weight: 500;
-}
-
-/* Employees Grid */
+/* Grille des employés */
 .employees-grid {
-  margin: 0 ;
   display: grid;
-   grid-template-columns: repeat(4, minmax(400px, 1fr));
-  gap: var(--spacing-4);
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: var(--spacing-6);
   margin-bottom: var(--spacing-10);
   width: 100%;
-  margin-left: auto;
-  margin-right: auto; 
-  padding: 10 10px; /* Correction: "10" → "var(--spacing-4)" */
-  margin-left: -200px;
 }
 
-/* Employee Card */
+/* Card employé - Style harmonisé */
 .employee-card {
-  background: var(--white);
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
   border: 2px solid var(--gray-200);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-4);
-  box-shadow: var(--shadow-lg);
+  border-radius: 20px;
+  padding: 0;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
+/* Ligne gradient en haut - comme l'admin */
 .employee-card::before {
   content: '';
   position: absolute;
@@ -98,19 +109,38 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   transition: transform 0.4s ease;
 }
 
-.employee-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-xl);
-  border-color: var(--primary-light);
-}
-
 .employee-card:hover::before {
   transform: scaleX(1);
 }
 
-/* Employee Primary Info (Nom + IP) */
+/* Effet shimmer au hover - comme l'admin */
+.employee-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(25, 25, 112, 0.1), transparent);
+  transition: left 0.6s;
+  pointer-events: none;
+}
+
+.employee-card:hover::after {
+  left: 100%;
+}
+
+.employee-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.15),
+    0 0 30px rgba(25, 25, 112, 0.2);
+  border-color: var(--primary-light);
+}
+
+/* Header avec avatar */
 .employee-primary {
-  padding: var(--spacing-6) var(--spacing-6) var(--spacing-4);
+  padding: var(--spacing-6);
   background: linear-gradient(135deg, var(--gray-50), var(--white));
   border-bottom: 1px solid var(--gray-100);
   display: flex;
@@ -118,22 +148,20 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   gap: var(--spacing-4);
 }
 
-.employee-avatar {
-  flex-shrink: 0;
-}
-
+/* Avatar avec effet néon */
 .avatar-circle {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 72px;
   height: 72px;
-  background: #191970;
+  background: linear-gradient(135deg, #191970, #4338ca);
   border-radius: 50%;
   color: var(--white);
   box-shadow: var(--shadow-lg);
   border: 4px solid var(--white);
   position: relative;
+  transition: all 0.3s ease;
 }
 
 .avatar-circle::after {
@@ -151,12 +179,20 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   opacity: 0.2;
 }
 
+.employee-card:hover .avatar-circle {
+  transform: scale(1.1);
+  box-shadow: 
+    0 12px 32px rgba(25, 25, 112, 0.4),
+    0 0 20px rgba(25, 25, 112, 0.3);
+}
+
 .avatar-initials {
   font-size: var(--font-size-xl);
   font-weight: 700;
   letter-spacing: -0.5px;
 }
 
+/* Nom et identité */
 .employee-identity {
   flex: 1;
   min-width: 0;
@@ -164,13 +200,17 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
 
 .employee-name {
   font-size: var(--font-size-2xl);
-  font-weight: 900px;
-  color: solid black;
+  font-weight: 900;
+  background: linear-gradient(135deg, #191970, #4338ca);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0 0 var(--spacing-2) 0;
   letter-spacing: -0.025em;
   line-height: 1.2;
 }
 
+/* Badge IP avec effet hover */
 .employee-id-badge {
   display: inline-flex;
   align-items: center;
@@ -182,12 +222,33 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   font-weight: 600;
   font-size: var(--font-size-sm);
   box-shadow: var(--shadow);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.employee-id-badge::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
 }
 
 .employee-card:hover .employee-id-badge {
   background: var(--primary-hover);
   transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(25, 25, 112, 0.4);
+}
+
+.employee-card:hover .employee-id-badge::before {
+  width: 200%;
+  height: 200%;
 }
 
 .employee-ip {
@@ -195,7 +256,7 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   letter-spacing: 0.5px;
 }
 
-/* Employee Secondary Info */
+/* Section secondaire */
 .employee-secondary {
   padding: var(--spacing-4) var(--spacing-6);
   border-bottom: 1px solid var(--gray-100);
@@ -205,14 +266,6 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   text-align: center;
 }
 
-.employee-position {
-  font-size: var(--font-size-lg);
-  font-weight: 900;
-  color: var(--primary);
-  margin: 0 0 var(--spacing-2) 0;
-  line-height: 1.3;
-}
-
 .employee-direction {
   font-size: var(--font-size-base);
   color: var(--gray-600);
@@ -220,7 +273,7 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   font-weight: 500;
 }
 
-/* Employee Contact Info */
+/* Contact section */
 .employee-contact {
   padding: var(--spacing-6);
 }
@@ -241,14 +294,46 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--gray-700);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   font-weight: 500;
+  position: relative;
+  overflow: hidden;
 }
 
-.contact-item:hover {
-  background: var(--primary-light);
-  border-color: var(--primary);
-  color: var(--primary);
+.contact-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.email-contact::before {
+  background: linear-gradient(180deg, var(--primary), var(--success));
+}
+
+.phone-contact::before {
+  background: linear-gradient(180deg, var(--primary), var(--warning));
+}
+
+.contact-item:hover::before {
+  transform: scaleY(1);
+}
+
+.email-contact:hover {
+  background: linear-gradient(135deg, var(--primary-light), rgba(16, 185, 129, 0.1));
+  border-color: var(--success);
+  color: var(--success);
+  transform: translateX(4px);
+}
+
+.phone-contact:hover {
+  background: linear-gradient(135deg, var(--primary-light), rgba(245, 158, 11, 0.1));
+  border-color: var(--warning);
+  color: var(--warning);
   transform: translateX(4px);
 }
 
@@ -263,18 +348,7 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   min-width: 0;
 }
 
-.email-contact:hover {
-  background: linear-gradient(135deg, var(--primary-light), var(--success)/10%);
-  border-color: var(--success);
-  color: var(--success);
-}
-
-.phone-contact:hover {
-  background: linear-gradient(135deg, var(--primary-light), var(--warning)/10%);
-  border-color: var(--warning);
-  color: var(--warning);
-}
-
+/* Tag service */
 .service-tag {
   display: inline-flex;
   align-items: center;
@@ -286,20 +360,33 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   font-size: var(--font-size-xs);
   font-weight: 600;
   border: 1px solid var(--gray-300);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .employee-card:hover .service-tag {
-  background: linear-gradient(135deg, var(--primary-light), var(--primary)/20%);
+  background: linear-gradient(135deg, var(--primary-light), rgba(25, 25, 112, 0.2));
   color: var(--primary);
   border-color: var(--primary);
 }
 
-/* Pagination Section */
+/* Pagination - Style admin */
 .pagination-section {
   padding: var(--spacing-8) 0;
-  border-top: 2px solid var(--gray-200);
   background: linear-gradient(180deg, var(--white) 0%, var(--gray-50) 100%);
+  border-top: 2px solid var(--gray-200);
+  position: relative;
+  margin-top: 3rem;
+}
+
+.pagination-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #191970, transparent);
 }
 
 .pagination-nav {
@@ -313,11 +400,14 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   display: flex;
   align-items: center;
   gap: var(--spacing-6);
-  background: var(--white);
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
   padding: var(--spacing-4);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(25, 25, 112, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .pagination-btn {
@@ -325,24 +415,40 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   align-items: center;
   gap: var(--spacing-2);
   padding: var(--spacing-3) var(--spacing-5);
-  background: var(--gray-100);
+  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
   border: 1px solid var(--gray-300);
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   color: var(--gray-700);
   font-weight: 600;
   font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.pagination-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(25, 25, 112, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.pagination-btn:hover::before {
+  left: 100%;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: var(--primary);
+  background: linear-gradient(145deg, #191970, #4338ca);
   border-color: var(--primary);
   color: var(--white);
-  
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(25, 25, 112, 0.3);
 }
 
 .pagination-btn:disabled {
@@ -360,30 +466,51 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: var(--gray-100);
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
   border: 1px solid var(--gray-300);
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   color: var(--gray-700);
   font-weight: 600;
   font-size: var(--font-size-base);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.pagination-page-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, transparent, rgba(25, 25, 112, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.pagination-page-btn:hover::before {
+  opacity: 1;
 }
 
 .pagination-page-btn:hover {
-  background: var(--primary-light);
+  background: linear-gradient(145deg, rgba(25, 25, 112, 0.1), rgba(25, 25, 112, 0.05));
   border-color: var(--primary);
   color: var(--primary);
   transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(25, 25, 112, 0.2);
 }
 
 .pagination-page-btn.active {
-  background: #192D70;
-  border-color: #192D70;
+  background: linear-gradient(145deg, #191970, #4338ca);
+  border-color: var(--primary);
   color: var(--white);
-  box-shadow: var(--shadow-md);
+  box-shadow: 
+    0 8px 25px rgba(25, 25, 112, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
 }
 
@@ -392,47 +519,61 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   color: var(--gray-600);
   font-weight: 600;
   padding: var(--spacing-3) var(--spacing-5);
-  background: var(--primary-light);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--primary);
+  background: linear-gradient(145deg, rgba(25, 25, 112, 0.1), rgba(25, 25, 112, 0.05));
+  border-radius: 16px;
+  border: 1px solid rgba(25, 25, 112, 0.2);
+  backdrop-filter: blur(5px);
 }
+
+/* Animations d'entrée */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.employee-card {
+  animation: slideInUp 0.6s ease-out backwards;
+}
+
+.employee-card:nth-child(1) { animation-delay: 0.1s; }
+.employee-card:nth-child(2) { animation-delay: 0.2s; }
+.employee-card:nth-child(3) { animation-delay: 0.3s; }
+.employee-card:nth-child(4) { animation-delay: 0.4s; }
+.employee-card:nth-child(5) { animation-delay: 0.5s; }
+.employee-card:nth-child(6) { animation-delay: 0.6s; }
 
 /* Responsive Design */
-
-/* 4 colonnes pour les grands écrans */
 @media (min-width: 1600px) {
   .employees-grid {
-    grid-template-columns: repeat(4, minmax(400px, 1fr));
+    grid-template-columns: repeat(4, minmax(380px, 1fr));
   }
 }
 
-/* 3 colonnes pour les écrans moyens */
 @media (max-width: 1599px) {
   .employees-grid {
-    grid-template-columns: repeat(3, minmax(400px, 1fr));
+    grid-template-columns: repeat(3, minmax(380px, 1fr));
   }
 }
 
-@media (max-width: 1400px) {
-  .employees-grid {
-    margin: 0 var(--spacing-4);
-    margin-bottom: var(--spacing-10);
-  }
-}
-
-/* 2 colonnes pour les tablettes */
 @media (max-width: 1200px) {
   .employees-grid {
-    grid-template-columns: repeat(2, minmax(400px, 1fr));
+    grid-template-columns: repeat(2, minmax(380px, 1fr));
+    gap: var(--spacing-5);
   }
 }
-
 
 @media (max-width: 1024px) {
   .employees-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-6);
     max-width: 800px;
+    margin: 0 auto var(--spacing-10);
   }
 }
 
@@ -471,40 +612,22 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
     font-size: var(--font-size-2xl);
   }
   
-  .employee-name {
-    font-size: var(--font-size-xl);
-    color: #191970;
-  }
-  
-  .stat-card {
-    flex-direction: column;
-    text-align: center;
-    gap: var(--spacing-3);
-  }
-  
   .pagination-wrapper {
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--spacing-4);
   }
   
-  .pagination-btn {
-    padding: var(--spacing-2) var(--spacing-3);
-  }
-  
   .pagination-pages {
     order: -1;
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 480px) {
-  .directory-section {
-    padding: var(--spacing-4) 0;
-  }
-  
   .employee-card {
-    margin: 0;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
   }
   
   .employee-primary {
@@ -528,11 +651,6 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
     font-size: var(--font-size-lg);
   }
   
-  .employee-name {
-    font-size: var(--font-size-lg);
-    color: #191970;
-  }
-  
   .employee-id-badge {
     padding: var(--spacing-1) var(--spacing-3);
     font-size: var(--font-size-xs);
@@ -540,111 +658,12 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   
   .contact-item {
     padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-xs);
   }
   
   .contact-text {
     font-size: var(--font-size-xs);
   }
   
-  /* MON AJOUT  */
-
-  /* Futuriste + Glassmorphism */
-.futuristic-card {
-  background: rgba(25, 29, 112, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(25, 29, 112, 0.2);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 4px 20px rgba(25, 29, 112, 0.15);
-  transition: all 0.35s ease;
-}
-
-.futuristic-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 6px 28px rgba(25, 29, 112, 0.35);
-}
-
-/* Neon Ring */
-.neon-ring {
-  position: relative;
-  border: 3px solid #191970;
-  box-shadow: 0 0 15px #19197080, 0 0 30px #192D70aa;
-}
-
-.neon-ring:hover {
-  box-shadow: 0 0 20px #191970cc, 0 0 40px #192D70dd;
-}
-
-/* Pulse badge (IP) */
-.pulse-badge {
-  background: #192D70;
-  color: #fff;
-  animation: pulseGlow 2s infinite;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0px #192D70; }
-  50% { box-shadow: 0 0 12px #192D70; }
-}
-
-/* Futuristic links */
-.futuristic-link {
-  background: rgba(25, 29, 112, 0.05);
-  border: 1px solid rgba(25, 29, 112, 0.3);
-  border-radius: var(--radius-lg);
-  transition: all 0.3s ease;
-}
-
-.futuristic-link:hover {
-  background: rgba(25, 29, 112, 0.15);
-  border-color: #191970;
-  color: #191970;
-  transform: translateY(-2px);
-}
-
-/* Futuristic tags */
-.futuristic-tag {
-  background: linear-gradient(135deg, #191970, #192D70);
-  color: white;
-  padding: 6px 12px;
-  border-radius: var(--radius-lg);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 0 12px rgba(25, 29, 112, 0.3);
-}
-
-/* Glassy header */
-.glassy-header {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid linear-gradient(135deg, #191970 50%, #191970 100%);
-}
-
-/* Pagination futuriste */
-.pagination-btn {
-  background: rgba(25, 29, 112, 0.05);
-  border: 1px solid rgba(25, 29, 112, 0.3);
-  border-radius: var(--radius-lg);
-  color: #191970;
-  padding: 8px 16px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background: #191970;
-  color: white;
-  transform: translateY(-2px) scale(1.05);
-}
-
-.pagination-page-btn.active {
-  background: #191970;
-  color: white;
-  box-shadow: 0 0 10px rgba(25, 29, 112, 0.4);
-  transform: scale(1.1);
-}
-
-
   .pagination-page-btn {
     width: 40px;
     height: 40px;
@@ -657,27 +676,13 @@ background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 20%);
   }
 }
 
-/* Loading and Animation States */
-@media (prefers-reduced-motion: no-preference) {
-  .employee-card {
-    animation: slideInUp 0.6s ease-out forwards;
-  }
-  
-  .employee-card:nth-child(1) { animation-delay: 0.1s; }
-  .employee-card:nth-child(2) { animation-delay: 0.2s; }
-  .employee-card:nth-child(3) { animation-delay: 0.3s; }
-  .employee-card:nth-child(4) { animation-delay: 0.4s; }
-  .employee-card:nth-child(5) { animation-delay: 0.5s; }
-  .employee-card:nth-child(6) { animation-delay: 0.6s; }
-}
-
-@keyframes slideInUp {  
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* Accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
