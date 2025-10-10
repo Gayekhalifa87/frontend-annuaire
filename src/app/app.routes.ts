@@ -65,7 +65,8 @@ export const routes: Routes = [
     path: 'admin',
     /* loadComponent: () => import('./pages/admin/admin/admin.component').then(m => m.AdminComponent),
     canActivate: [AuthGuard, authGuard]  */ // AuthGuard Keycloak + notre guard local
-    component: AdminComponent
+    component: AdminComponent,
+    
   },
   {
     path: 'employes',

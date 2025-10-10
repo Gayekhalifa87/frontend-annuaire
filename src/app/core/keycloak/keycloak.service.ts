@@ -26,12 +26,12 @@ export class KeycloakService {
     }).then((authenticated) => {
       this.initialized = true;
       console.log('🔧 Keycloak initialisé, authentifié :', authenticated);
-      
-      if (this.isLoggedIn()) {/* 
-        console.log('✅ Connecté, token :', this.getToken());
-        console.log('👤 Profil utilisateur :', this.getUserProfile()); */
-        redirectUri: window.location.origin + '/admin'
-      }
+
+      // NOTE: We intentionally do not attempt to reach into other services here
+      // (avoid circular DI). Consumers (eg AppComponent) should call
+      // KeycloakService.isLoggedIn() / getToken() after init() resolves and
+      // synchronize application-level AuthService state if needed.
+
     }).catch(err => {
       console.error('❌ Erreur Keycloak init :', err);
       this.initialized = true; // ✅ Marquer comme initialisé même en cas d'erreur
@@ -54,17 +54,17 @@ export class KeycloakService {
     return this.initialized;
   }
 
- /*  login() {
+  /**
+   * Lance le flow Keycloak et redirige vers le chemin donné après authentification.
+   * Si redirectPath n'est pas fourni, redirige vers /admin.
+   */
+  login(redirectPath: string = '/admin') {
+    const redirectUri = window.location.origin + redirectPath;
     this.keycloak.login({
-      redirectUri: window.location.origin + '/admin'
+      redirectUri,
+      prompt: 'login' // Forcer affichage du formulaire
     });
-  } */
- login() {
-  this.keycloak.login({
-    redirectUri: window.location.origin + '/admin',
-    prompt: 'login'   // 🔹 Forcer affichage formulaire
-  });
-}
+  }
 
 
   /** Déconnexion avec redirection */
