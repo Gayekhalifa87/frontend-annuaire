@@ -12,20 +12,7 @@ import { AdminComponent } from './pages/admin';
 import { EmployesComponent } from './pages/admin/employes/employes.component';
 import { OrganigrammeComponent } from './pages/collaborateur/organigramme/organigramme.component';
 
-// Guard pour protéger les routes (connecté)
-export const authGuard = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
-  const keycloakService = inject(KeycloakService);
-
-  return authService.isLoggedIn$.pipe(
-    map(isLoggedIn => {
-      if (isLoggedIn) return true;
-      keycloakService.login();
-      return false;
-    })
-  );
-};
+// (Utiliser la classe AuthGuard injectable pour protéger les routes)
 
 
 // Guard pour rediriger si déjà connecté
@@ -63,27 +50,28 @@ export const routes: Routes = [
   // Routes protégées (nécessitent d’être connecté)
   { 
     path: 'admin',
-    /* loadComponent: () => import('./pages/admin/admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [AuthGuard, authGuard]  */ // AuthGuard Keycloak + notre guard local
-    component: AdminComponent
+    component: AdminComponent,
+    canActivate: [AuthGuard]  
   },
   {
     path: 'employes',
     component: EmployesComponent,
+    canActivate: [AuthGuard]
   },
   { 
     path: 'recherche',
     loadComponent: () => import('./components/search/search.component').then(m => m.SearchComponent),
-    canActivate: [AuthGuard, authGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'parametres',
     component: ParametresComponent,
-    canActivate: [AuthGuard, authGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'organigramme',
     component: OrganigrammeComponent,
+    canActivate: [AuthGuard]
   },
 
 

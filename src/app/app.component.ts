@@ -18,8 +18,8 @@ export class AppComponent {
   constructor(private keycloakService: KeycloakService) {}
 
   ngOnInit() {
-    // ⚡ Utilisation après injection
-    this.keycloakService.init(true).then(() => {
+    // ⚡ Utilisation après injection (check-sso au démarrage, ne pas forcer login)
+    this.keycloakService.init(false).then(() => {
       if (!this.keycloakService.isLoggedIn()) {
         console.log("Utilisateur non connecté");
       } else {
