@@ -55,6 +55,7 @@ export class AdminComponent {
       telephone: [''],
       role: ['user', Validators.required],
     });
+    
   }
 
   ngOnInit() {
@@ -128,41 +129,60 @@ export class AdminComponent {
     this.showAddForm = true;
   }
 
+
   updateEmploye() {
-    if (!this.editingEmployeeId) return;
+  if (!this.editingEmployeeId) return;
 
-    const updatedData: Partial<Employe> = {};
-    if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
-    if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
-    if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
+  // ✅ Vérification des champs modifiés
+  const ipChanged = this.addEmployeeForm.get('ip')?.dirty;
+  const telChanged = this.addEmployeeForm.get('telephone')?.dirty;
 
-    this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
-      .subscribe({
-        next: (updatedEmp) => {
-          this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
-          this.resetForm();
-          Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
-          this.loadEmployees(); 
-          this.calculatePagination(); 
-        },
-        error: (err: any) => {
-          console.error('Erreur lors de la mise à jour :', err);
-
-          let message = 'Erreur lors de la mise à jour ❌';
-          if (err.error && err.error.message) {
-            message = err.error.message;
-          } else if (err.status === 400) {
-            message = 'Requête invalide';
-          }
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: message
-          });
-        }
-      });
+  // ✅ Validation : si l'un est modifié, l'autre doit l'être aussi
+  if ((ipChanged && !telChanged) || (telChanged && !ipChanged)) {
+    // Déterminer quel champ a été modifié pour personnaliser le message
+    const modifiedField = ipChanged ? "l'IP" : "le téléphone";
+    const requiredField = ipChanged ? "le téléphone" : "l'IP";
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Attention',
+      html: `Vous venez de modifier <strong>${modifiedField}</strong>.<br>Vous devez également modifier <strong>${requiredField}</strong> car ils vont de pair.`
+    });
+    return; // ⛔ On arrête l'exécution ici
   }
+
+  const updatedData: Partial<Employe> = {};
+  if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
+  if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
+  if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
+
+  this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
+    .subscribe({
+      next: (updatedEmp) => {
+        this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
+        this.resetForm();
+        Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
+        this.loadEmployees(); 
+        this.calculatePagination(); 
+      },
+      error: (err: any) => {
+        console.error('Erreur lors de la mise à jour :', err);
+
+        let message = 'Erreur lors de la mise à jour ❌';
+        if (err.error && err.error.message) {
+          message = err.error.message;
+        } else if (err.status === 400) {
+          message = 'Requête invalide';
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Erreur',
+          text: message
+        });
+      }
+    });
+}
 
   /** 🔹 Supprimer un employé */
   deleteEmployee(emp: Employe) {
