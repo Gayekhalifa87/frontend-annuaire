@@ -125,7 +125,7 @@ export class EmployesComponent implements OnInit {
     ip: undefined,
     telephone: '',
     role: 'USER',
-    password: 'ChangeMe123!' 
+    password: 'password123!' 
   };
   selectedAgent: ExternalAgent | null = null;
 
@@ -133,7 +133,7 @@ export class EmployesComponent implements OnInit {
     this.selectedAgent = agent;
     this.newEmploye = {
       employeId: agent.id,
-      ip: undefined,
+      ip: agent.ip,
       telephone: '',
       role: 'USER',
       password: 'password123!'
