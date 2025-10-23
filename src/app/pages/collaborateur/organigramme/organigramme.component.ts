@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChefInfo, EmployeService, ExternalAgent } from '../../../core/employe.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 interface HierarchyNode {
   id: number;
@@ -34,6 +35,7 @@ export class OrganigrammeComponent implements OnInit {
 
   constructor(
     private employeService: EmployeService,
+    private location: Location,
     private router: Router
   ) {}
 
@@ -134,6 +136,6 @@ export class OrganigrammeComponent implements OnInit {
   }
 
   retour(): void {
-    this.router.navigate(['/admin']);
+    this.location.back();
   }
 }

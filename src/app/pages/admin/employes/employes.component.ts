@@ -6,6 +6,8 @@ import { Employe, EmployeService, ExternalAgent } from '../../../core/employe.se
 import { AuthService } from '../../../core/auth.service';
 import { SharedDataService } from '../../../core/shared-data.service';
 import Swal from 'sweetalert2';
+import { KeycloakService } from '../../../core/keycloak/keycloak.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-employes',
@@ -33,6 +35,8 @@ export class EmployesComponent implements OnInit {
     private router: Router,
     private employeService: EmployeService,
     private authService: AuthService,
+    private keycloakService: KeycloakService,
+    private location: Location,
     private sharedDataService: SharedDataService  
   ) {}
 
@@ -178,11 +182,29 @@ export class EmployesComponent implements OnInit {
 
   // --- Navigation ---
   retour(): void {
-    this.router.navigate(['admin/']);
+    this.location.back();
   }
-  onLogout(): void {
+/*   onLogout(): void {
     this.authService.logout();
     this.router.navigate(['/accueil']);
+  } */
+  async onLogout(): Promise<void> {
+    try {
+      console.log('🚪 Déconnexion via Keycloak...');
+      // ✅ Supprime la session locale (token JWT éventuel)
+      this.authService.logout();
+
+      // ✅ Déconnexion SSO Keycloak + redirection vers le formulaire de connexion
+      await this.keycloakService.logout();
+      console.log('✅ Redirection vers le formulaire Keycloak...');
+    } catch (error) {
+      console.error('❌ Erreur lors de la déconnexion Keycloak :', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: 'Impossible de se déconnecter correctement.'
+      });
+    }
   }
 
   // --- Pagination ---
