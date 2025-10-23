@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { KeycloakService } from './keycloak.service';
 @Injectable()
+
 export class AuthInterceptor implements HttpInterceptor {
   
   constructor(private keycloakService: KeycloakService) {}

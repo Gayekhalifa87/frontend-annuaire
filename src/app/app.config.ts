@@ -1,10 +1,15 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { KeycloakService } from './core/keycloak/keycloak.service';
+import { inject } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import { routes } from './app.routes';
+export const AuthInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
+  const keycloakService = inject(KeycloakService);
+  const token = keycloakService.getToken();
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  const authReq = token
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+    : req;
+
+  return next(authReq);
 };
-
-

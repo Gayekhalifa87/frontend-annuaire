@@ -1,41 +1,47 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthService } from '../../../auth.service';
 import { KeycloakService } from '../../keycloak.service';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router, private keycloakService: KeycloakService) {}
+  constructor(
+    private router: Router, 
+    private keycloakService: KeycloakService
+  ) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    console.log('AuthGuard.canActivate called for', state?.url);
-    // Attendre l'initialisation Keycloak si elle est en cours
-    try {
-      if ((this.keycloakService as any).initPromise) {
-        await (this.keycloakService as any).initPromise;
-      }
-    } catch (e) {
-      // ignore init errors
+  async canActivate(
+    route: ActivatedRouteSnapshot, 
+    state: RouterStateSnapshot
+  ): Promise<boolean> {
+    console.log('🔐 AuthGuard: Vérification pour', state?.url);
+    
+    // ✅ Attendre initialisation Keycloak
+    let attempts = 0;
+    while (!this.keycloakService.isInitialized() && attempts < 20) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
     }
 
-    const loggedLocal = this.authService.isLoggedIn();
-    const loggedKeycloak = this.keycloakService.isLoggedIn();
-    console.log('AuthGuard states -> local:', loggedLocal, 'keycloak:', loggedKeycloak);
-    if (loggedLocal || loggedKeycloak) {
-      console.log('AuthGuard: access granted to', state?.url);
+    if (!this.keycloakService.isInitialized()) {
+      console.error('❌ Keycloak non initialisé');
+      return false;
+    }
+
+    const isAuthenticated = this.keycloakService.isLoggedIn();
+    console.log('AuthGuard: Authentifié =', isAuthenticated);
+    
+    if (isAuthenticated) {
+      console.log('✅ Accès autorisé à', state?.url);
       return true;
     }
 
-    // Si pas connecté, lancer le flow Keycloak vers l'URL demandée
-  const returnUrl = state && state.url ? state.url : '/admin';
-  console.log('AuthGuard: not authenticated, redirecting to Keycloak, returnUrl=', returnUrl);
-    try {
-      this.keycloakService.login(returnUrl);
-    } catch (e) {
-      // fallback : naviguer vers accueil
-      this.router.navigate(['/accueil']);
-    }
+    // ❌ Pas connecté → redirection login
+    const returnUrl = state?.url || '/accueil';
+    console.log('❌ Non authentifié → redirection login, returnUrl=', returnUrl);
+    
+    this.keycloakService.login(returnUrl);
     return false;
   }
 }

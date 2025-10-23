@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { KeycloakService } from './core/keycloak/keycloak.service'; // ⚡ chemin correct
-
 
 @Component({
   selector: 'app-root',
@@ -10,21 +8,12 @@ import { KeycloakService } from './core/keycloak/keycloak.service'; // ⚡ chemi
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-
 export class AppComponent {
   title = 'frontend';
-
-  // ⚡ Injection du service Keycloak
-  constructor(private keycloakService: KeycloakService) {}
-
-  ngOnInit() {
-    // ⚡ Utilisation après injection (check-sso au démarrage, ne pas forcer login)
-    this.keycloakService.init(false).then(() => {
-      if (!this.keycloakService.isLoggedIn()) {
-        console.log("Utilisateur non connecté");
-      } else {
-        console.log("Utilisateur connecté");
-      }
-    });
+  
+  // ✅ L'initialisation Keycloak est gérée par APP_INITIALIZER dans main.ts
+  // Rien à faire ici
+  constructor() {
+    console.log('🎯 AppComponent initialisé');
   }
 }

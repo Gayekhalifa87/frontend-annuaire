@@ -155,7 +155,7 @@ export class EmployesComponent implements OnInit {
           timer: 2000,
           showConfirmButton: false
         });
-        this.newEmploye = { employeId: 0, ip: undefined, telephone: '', role: 'USER', password: 'ChangeMe123!' };
+        this.newEmploye = { employeId: 0, ip: undefined, telephone: '', role: 'USER', password: 'password123!' };
         this.selectedAgent = null;
 
         const modalEl = document.getElementById('addEmployeModal');

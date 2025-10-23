@@ -6,9 +6,10 @@ import { EmployeService, Employe } from '../../../core/employe.service';
 import Swal from 'sweetalert2';
 import { RouterLink } from "@angular/router";
 import { Input } from '@angular/core';
-import { AuthService } from '../../../core/auth.service';
 import { Router } from '@angular/router';
 import { SharedDataService } from '../../../core/shared-data.service';
+// ✅ IMPORTANT: Importer KeycloakService au lieu de AuthService
+import { KeycloakService } from '../../../core/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-admin',
@@ -37,10 +38,14 @@ export class AdminComponent {
   @Input() user: any;
   filteredAgents: any;
 
+  // ✅ Variable pour gérer l'état de déconnexion (empêche double-clic)
+  isLoggingOut = false;
+
   constructor(
     private employeService: EmployeService,
     private sharedDataService: SharedDataService,
-    private authService: AuthService,
+    // ✅ MODIFICATION: Remplacer AuthService par KeycloakService
+    private keycloakService: KeycloakService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -55,12 +60,11 @@ export class AdminComponent {
       telephone: [''],
       role: ['user', Validators.required],
     });
-    
   }
 
   ngOnInit() {
     this.loadEmployees();
-    this.loadTotalAgents();  // ✅ Charger le total des agents externes
+    this.loadTotalAgents();
   }
 
   /** 🔹 Charger le total des agents externes */
@@ -68,7 +72,6 @@ export class AdminComponent {
     this.employeService.getAllExternalAgents(0, 100000).subscribe({
       next: (response) => {
         this.totalAgents = response.results?.length || 0;
-        // Mettre à jour le service partagé pour les autres composants
         this.sharedDataService.setTotalAgents(this.totalAgents);
       },
       error: (err) => console.error('Erreur lors du chargement des agents externes', err)
@@ -129,60 +132,58 @@ export class AdminComponent {
     this.showAddForm = true;
   }
 
-
   updateEmploye() {
-  if (!this.editingEmployeeId) return;
+    if (!this.editingEmployeeId) return;
 
-  // ✅ Vérification des champs modifiés
-  const ipChanged = this.addEmployeeForm.get('ip')?.dirty;
-  const telChanged = this.addEmployeeForm.get('telephone')?.dirty;
+    // ✅ Vérification des champs modifiés
+    const ipChanged = this.addEmployeeForm.get('ip')?.dirty;
+    const telChanged = this.addEmployeeForm.get('telephone')?.dirty;
 
-  // ✅ Validation : si l'un est modifié, l'autre doit l'être aussi
-  if ((ipChanged && !telChanged) || (telChanged && !ipChanged)) {
-    // Déterminer quel champ a été modifié pour personnaliser le message
-    const modifiedField = ipChanged ? "l'IP" : "le téléphone";
-    const requiredField = ipChanged ? "le téléphone" : "l'IP";
-    
-    Swal.fire({
-      icon: 'warning',
-      title: 'Attention',
-      html: `Vous venez de modifier <strong>${modifiedField}</strong>.<br>Vous devez également modifier <strong>${requiredField}</strong> car ils vont de pair.`
-    });
-    return; // ⛔ On arrête l'exécution ici
-  }
+    // ✅ Validation : si l'un est modifié, l'autre doit l'être aussi
+    if ((ipChanged && !telChanged) || (telChanged && !ipChanged)) {
+      const modifiedField = ipChanged ? "l'IP" : "le téléphone";
+      const requiredField = ipChanged ? "le téléphone" : "l'IP";
+      
+      Swal.fire({
+        icon: 'warning',
+        title: 'Attention',
+        html: `Vous venez de modifier <strong>${modifiedField}</strong>.<br>Vous devez également modifier <strong>${requiredField}</strong> car ils vont de pair.`
+      });
+      return;
+    }
 
-  const updatedData: Partial<Employe> = {};
-  if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
-  if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
-  if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
+    const updatedData: Partial<Employe> = {};
+    if (this.addEmployeeForm.get('ip')?.dirty) updatedData.ip = this.addEmployeeForm.get('ip')?.value;
+    if (this.addEmployeeForm.get('telephone')?.dirty) updatedData.telephone = this.addEmployeeForm.get('telephone')?.value;
+    if (this.addEmployeeForm.get('password')?.dirty) updatedData.password = this.addEmployeeForm.get('password')?.value;
 
-  this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
-    .subscribe({
-      next: (updatedEmp) => {
-        this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
-        this.resetForm();
-        Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
-        this.loadEmployees(); 
-        this.calculatePagination(); 
-      },
-      error: (err: any) => {
-        console.error('Erreur lors de la mise à jour :', err);
+    this.employeService.updateEmploye(this.editingEmployeeId, updatedData as Employe)
+      .subscribe({
+        next: (updatedEmp) => {
+          this.employes = this.employes.map(e => e.id === updatedEmp.id ? updatedEmp : e);
+          this.resetForm();
+          Swal.fire({ icon: 'success', title: 'Modification réussie', timer: 1500 });
+          this.loadEmployees(); 
+          this.calculatePagination(); 
+        },
+        error: (err: any) => {
+          console.error('Erreur lors de la mise à jour :', err);
 
-        let message = 'Erreur lors de la mise à jour ❌';
-        if (err.error && err.error.message) {
-          message = err.error.message;
-        } else if (err.status === 400) {
-          message = 'Requête invalide';
+          let message = 'Erreur lors de la mise à jour ❌';
+          if (err.error && err.error.message) {
+            message = err.error.message;
+          } else if (err.status === 400) {
+            message = 'Requête invalide';
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: message
+          });
         }
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Erreur',
-          text: message
-        });
-      }
-    });
-}
+      });
+  }
 
   /** 🔹 Supprimer un employé */
   deleteEmployee(emp: Employe) {
@@ -250,10 +251,84 @@ export class AdminComponent {
     console.log('Résultats de la recherche :', results);
   }
 
-  /** Déconnexion */
-  onLogout() {
-    console.log('🚪 Déconnexion...');
-    this.authService.logout();
-    this.router.navigate(['/accueil']);
+  /** 
+   * 🚪 DÉCONNEXION KEYCLOAK
+   * 
+   * Cette méthode gère la déconnexion complète :
+   * 1. Affiche une confirmation SweetAlert2
+   * 2. Empêche les double-clics avec isLoggingOut
+   * 3. Appelle keycloakService.logout() qui :
+   *    - Nettoie les privilèges (PrivilegeService.clearPrivileges())
+   *    - Vide localStorage et sessionStorage
+   *    - Déconnecte de Keycloak (supprime le SSO)
+   *    - Redirige vers /accueil
+   * 4. /accueil nécessite authentification (AuthGuard) donc redirige vers login Keycloak
+   * 
+   * Résultat final : Utilisateur déconnecté ET redirigé vers le formulaire de connexion
+   */
+  async onLogout() {
+    // ⛔ Empêcher les double-clics pendant la déconnexion
+    if (this.isLoggingOut) {
+      console.log('⚠️ Déconnexion déjà en cours...');
+      return;
+    }
+
+    // 🔔 Demander confirmation avant de déconnecter
+    const result = await Swal.fire({
+      title: 'Déconnexion',
+      text: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Oui, me déconnecter',
+      cancelButtonText: 'Annuler',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d'
+    });
+
+    // ❌ Utilisateur a annulé
+    if (!result.isConfirmed) {
+      console.log('ℹ️ Déconnexion annulée par l\'utilisateur');
+      return;
+    }
+
+    // ✅ Démarrer le processus de déconnexion
+    this.isLoggingOut = true;
+    console.log('🚪 Déconnexion en cours...');
+
+    try {
+      // 🔥 APPEL PRINCIPAL : Déconnexion Keycloak complète
+      // Cette méthode fait TOUT :
+      // - Nettoie les privilèges stockés en mémoire
+      // - Vide localStorage (tokens, données utilisateur)
+      // - Vide sessionStorage
+      // - Appelle keycloak.logout() pour invalider la session SSO
+      // - Redirige vers /accueil (qui nécessite auth → redirection login)
+      await this.keycloakService.logout('/accueil');
+
+      // 📝 Note : La redirection se fait automatiquement via Keycloak
+      // On n'atteint généralement jamais ce point car Keycloak redirige avant
+      console.log('✅ Déconnexion réussie');
+
+    } catch (err) {
+      // ❌ Gestion des erreurs (réseau, timeout, etc.)
+      console.error('❌ Erreur lors de la déconnexion:', err);
+      
+      // Afficher un message d'erreur à l'utilisateur
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de déconnexion',
+        text: 'Une erreur est survenue. Tentative de redirection...',
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      // 🔄 Fallback : Forcer la redirection manuelle vers /accueil
+      // Qui déclenchera AuthGuard → redirection login
+      this.router.navigate(['/accueil']);
+
+    } finally {
+      // 🔓 Réinitialiser le flag (au cas où on resterait sur la page)
+      this.isLoggingOut = false;
+    }
   }
 }
